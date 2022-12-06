@@ -60,8 +60,10 @@ pub fn main() {
         }
 
         else {
-            panic!("logic error")
+            //nothing new
         }
     }
-    println!("top: {top}, second:{second}, third:{third}")
+    println!("top: {top}, second:{second}, third:{third}");
+    let top_three = top + second + third;
+    println!("top three together: {top_three}");
 }
