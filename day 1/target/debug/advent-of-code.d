@@ -1,0 +1,1 @@
+/home/ostap-tymur-tymchenko/Projects/code/Rust/advent-of-code/target/debug/advent-of-code: /home/ostap-tymur-tymchenko/Projects/code/Rust/advent-of-code/src/ac1_log.rs /home/ostap-tymur-tymchenko/Projects/code/Rust/advent-of-code/src/main.rs
