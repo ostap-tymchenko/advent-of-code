@@ -17,7 +17,7 @@ fn open_file() -> String {
     let mut s = String::new();
     match file.read_to_string(&mut s) {
         Err(why) => panic!("couldn't read {}: {}", display, why),
-        Ok(_) => print!("{} contains:\n{}", display, s),
+        Ok(_) => print!("{} contains: s", display),
     }
 
     s
@@ -26,16 +26,42 @@ fn open_file() -> String {
 pub fn main() {
     let file = open_file();
     // println!("{file}");
+    
+    let mut top = 0;
+    let mut second = 0;
+    let mut third = 0;
 
-   
 
     for found in file.split("\n\n") {
-        dbg!(found);
+        // dbg!(found);
         let mut buffer = 0;
         for induvidual_str in found.split("\n"){
-            let induvidual_int: i32 = induvidual_str.parse().unwrap();
+            let induvidual_int = match induvidual_str.parse::<i32>() {
+                Ok(i) => i,
+                Err(_e) => -1,
+            }; 
+
             buffer = buffer + induvidual_int;
-            dbg!(buffer);
+            // dbg!(buffer);
+        }
+
+        if buffer > top {
+            third = second;
+            second = top;
+            top = buffer;
+        
+        } else if buffer > second {
+            third = second;
+            second = buffer;
+        
+
+        } else if buffer > third {
+            third = buffer;
+        }
+
+        else {
+            panic!("logic error")
         }
     }
+    println!("top: {top}, second:{second}, third:{third}")
 }
