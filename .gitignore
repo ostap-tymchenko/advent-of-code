@@ -20,3 +20,8 @@ target/
 bin/
 .classpath
 .project
+
+
+# Added by cargo
+
+/target
