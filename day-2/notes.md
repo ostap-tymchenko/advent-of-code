@@ -17,3 +17,16 @@ outcome scores
 WIN - 6 POINTS
 LOOSE - 0 POINTS
 DRAW - 3 POINTS
+
+
+LETTER TO STATUS SYSTEM
+X - loose
+Y - draw
+Z - win
+
+Dummy data
+C X
+A Y
+B Z
+
+
