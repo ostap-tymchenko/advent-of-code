@@ -4,7 +4,7 @@ use std::path::Path;
 
 fn open_file() -> String {
     // Create a path to the desired file
-    let path = Path::new("src/data.txt");
+    let path = Path::new("src/dummy-data.txt");
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
@@ -26,4 +26,9 @@ fn open_file() -> String {
 pub fn main() {
     let file = open_file();
     println!("{file}");
+
+    for i in file.lines() {
+        // dbg!(i);
+
+    }   
 }
