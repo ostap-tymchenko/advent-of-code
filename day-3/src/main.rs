@@ -1,6 +1,9 @@
+use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
+use std::str::Chars;
 
 fn open_file() -> String {
     // Create a path to the desired file
@@ -27,8 +30,37 @@ pub fn main() {
     let file = open_file();
     println!("{file}");
 
-    for i in file.lines() {
-        // dbg!(i);
+    
+    #[derive(Hash, Eq, PartialEq, Debug)]
+    struct Priority {
+    charachter: char,
+    priority: i32,
+    }
 
+    let alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".to_string(); 
+
+    let mut priorities = HashSet::new();
+    
+    let mut iterator = 0;
+    for iterchars in alphabet.chars() {
+        iterator += 1;
+        priorities.insert(Priority {charachter: iterchars, priority: iterator});
+    }
+
+    dbg!(&priorities);
+
+    // dbg!(priorities);
+
+    for lines in file.lines() {
+        let len = lines.len();
+        let first = &lines[0..len / 2];
+        let second = &lines[len /2 ..];
+
+        let first = BTreeSet::from_iter(first.chars());
+        let second = BTreeSet::from_iter(second.chars());
+
+        let shared_char = (&first) & (&second);
+
+        
     }   
 }
