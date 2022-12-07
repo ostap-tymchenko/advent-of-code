@@ -17,7 +17,7 @@ fn open_file() -> String {
     let mut data = String::new();
     match file.read_to_string(&mut data) {
         Err(why) => panic!("couldn't read {}: {}", display, why),
-        Ok(_) => print!("{} contains: data", display),
+        Ok(_) => print!("{} contains: data\n", display),
     }
 
     data
@@ -29,10 +29,12 @@ fn main() {
 
     let mut points = 0;
 
-    for line in file.split("\n") {
+    for line in file.lines() {
         dbg!(line);
         let (opponent, player) = line.split_at(1);
-        // dbg!(opponent, player);
+        let opponent = opponent.trim();
+        let player = player.trim();
+        dbg!(opponent, player);
 
         if player == "X" {
             points += 1;
@@ -83,7 +85,7 @@ fn main() {
                 panic!("bad logic / input")
             }
         }
-     
     } // for line in ...
+    println!("{points}")
     
 } //main
