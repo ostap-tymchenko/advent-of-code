@@ -30,37 +30,26 @@ pub fn main() {
     let file = open_file();
     println!("{file}");
 
-    
-    #[derive(Hash, Eq, PartialEq, Debug)]
-    struct Priority {
-    charachter: char,
-    priority: i32,
-    }
-
-    let alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".to_string(); 
-
-    let mut priorities = HashSet::new();
-    
-    let mut iterator = 0;
-    for iterchars in alphabet.chars() {
-        iterator += 1;
-        priorities.insert(Priority {charachter: iterchars, priority: iterator});
-    }
-
-    dbg!(&priorities);
-
-    // dbg!(priorities);
+    let alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
 
     for lines in file.lines() {
         let len = lines.len();
         let first = &lines[0..len / 2];
         let second = &lines[len /2 ..];
 
-        let first = BTreeSet::from_iter(first.chars());
-        let second = BTreeSet::from_iter(second.chars());
+        let first_btreeset = BTreeSet::from_iter(first.chars());
+        let second_btreeset = BTreeSet::from_iter(second.chars());
 
-        let shared_char = (&first) & (&second);
+        let mut common_char = '_';
 
-        
+        for char in first.chars() {
+            if second_btreeset.contains(&char) {
+                common_char = char;
+            } 
+        }
+
+        let priority = alphabet.find(common_char);
+        // let priority = priority + 1;
+        dbg!(priority);
     }   
 }

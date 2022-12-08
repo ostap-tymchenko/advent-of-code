@@ -1,32 +1,17 @@
-OPPONENTS CHOICE:
-A - ROCK
-B - PAPER
-C - SCISSORS
+example:
+PmmdzqPrVvPwwTWBwg
 
-PLAYER CHOICE 
-X - ROCK 
-Y - PAPER
-Z - SCISSORS
+splits into:
+PmmdzqPrV and vPwwTWBwg
 
-choice bonus scores
-(X) ROCK - 1 BONUS
-(Y) PAPER - 2 BONUS
-(Z) SCISSORS - 3 BONUS
+both contain:
+uppercase "P"
 
-outcome scores
-WIN - 6 POINTS
-LOOSE - 0 POINTS
-DRAW - 3 POINTS
+lowecase a through z have priorities 1 through 26
+uppercase A through Z have priorities 27 through 52
 
-
-LETTER TO STATUS SYSTEM
-X - loose
-Y - draw
-Z - win
-
-Dummy data
-C X
-A Y
-B Z
+objective:
+Find the item type that appears in both compartments of each rucksack. 
+WHAT IS THE SUM OF THE PRIORITIES OF THOSE ITEM TYPES?
 
 
