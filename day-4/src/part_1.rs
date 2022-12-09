@@ -33,10 +33,17 @@ pub fn main() {
         let mut first_end = "";
         let mut second_start = "";
         let mut second_end = "";
+        let mut first_half = "";
+        let mut second_half = "";
         
         let mut half_iterator = 0;
         for half in line.split(",") {
             half_iterator += 1;
+            if half_iterator == 1 {
+                first_half = half;
+            } else if half_iterator == 2 {
+                second_half = half;
+            }
             // dbg!(half, half_iterator);
             let mut quart_iterator = 0;
 
@@ -67,22 +74,15 @@ pub fn main() {
             }
         }
 
-        dbg!(line);
-        dbg!(first_start, first_end, second_start, second_end);
+        // dbg!(line);
+        // dbg!(first_start, first_end, second_start, second_end);
 
-        if first_start <= second_start {
-            if first_end >= second_end {
-                println!("totally overlapping set");
-                totally_overlapping_sets += 1;
-            }
-        } else if first_start >= second_start {
-            if first_end <= second_end {
-                println!("totally overlapping set");
-                totally_overlapping_sets += 1;
-            }
-        } else {
-            // not overlapping
-        }
+        // for char in first_half.chars() {
+        //     
+        // } 
+
+        let compare = 5;
+        dbg!((3..5).contains(&compare));
     }
 
     dbg!(totally_overlapping_sets);
