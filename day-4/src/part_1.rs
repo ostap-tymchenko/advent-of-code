@@ -5,7 +5,7 @@ use std::path::Path;
 
 fn open_file() -> String {
     // Create a path to the desired file
-    let path = Path::new("src/dummy-data.txt");
+    let path = Path::new("src/data.txt");
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
@@ -24,26 +24,20 @@ fn open_file() -> String {
     data
 }
 
+
 pub fn main() {
     let file = open_file();
     let mut totally_overlapping_sets = 0;
 
     for line in file.lines() {
-        let mut first_start = "";
-        let mut first_end = "";
-        let mut second_start = "";
-        let mut second_end = "";
-        let mut first_half = "";
-        let mut second_half = "";
+        let mut start1 = "";
+        let mut end1 = "";
+        let mut start2 = "";
+        let mut end2 = "";
         
         let mut half_iterator = 0;
         for half in line.split(",") {
             half_iterator += 1;
-            if half_iterator == 1 {
-                first_half = half;
-            } else if half_iterator == 2 {
-                second_half = half;
-            }
             // dbg!(half, half_iterator);
             let mut quart_iterator = 0;
 
@@ -54,17 +48,17 @@ pub fn main() {
                 // setting the start and end boundries of the first half
                 if half_iterator == 1 {
                     if quart_iterator == 1 {
-                        first_start = quart;
+                        start1 = quart;
                     } else if quart_iterator == 2 {
-                        first_end = quart;
+                        end1 = quart;
                     } else {
                         unreachable!();
                     }
                 } else if half_iterator == 2 {
                      if quart_iterator == 1 {
-                        second_start = quart;
+                        start2 = quart;
                     } else if quart_iterator == 2 {
-                        second_end = quart;
+                        end2 = quart;
                     } else {
                         unreachable!();
                     } 
@@ -74,15 +68,16 @@ pub fn main() {
             }
         }
 
-        // dbg!(line);
-        // dbg!(first_start, first_end, second_start, second_end);
+        dbg!(line);
+        dbg!(start1, end1, start2, end2);
 
-        // for char in first_half.chars() {
-        //     
-        // } 
-
-        let compare = 5;
-        dbg!((3..5).contains(&compare));
+         
+        if (start1 >= start2 && end1 <= end2) || (start2 >= start1 && end2 <= end1) {
+            println!("true");
+            totally_overlapping_sets += 1
+        } else {
+            println!("false")
+        }
     }
 
     dbg!(totally_overlapping_sets);
