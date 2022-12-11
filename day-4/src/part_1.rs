@@ -5,7 +5,7 @@ use std::path::Path;
 
 fn open_file() -> String {
     // Create a path to the desired file
-    let path = Path::new("src/data.txt");
+    let path = Path::new("src/dummy-data.txt");
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
@@ -71,6 +71,8 @@ pub fn main() {
         dbg!(line);
         dbg!(start1, end1, start2, end2);
 
+        
+        let (string1, string2, string3, string4) = (string1.parse::<i32>().unwrap(), string2.parse::<i32>().unwrap(), string3.parse::<i32>().unwrap(), string4.parse::<i32>().unwrap());
          
         if (start1 >= start2 && end1 <= end2) || (start2 >= start1 && end2 <= end1) {
             println!("true");
