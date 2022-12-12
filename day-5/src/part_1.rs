@@ -45,17 +45,22 @@ pub fn main() {
     for line in chart.lines() {
         chart_vec.push(line)
     }
+
+    // later replace with let mut chart_vec = vec![chart];
     
     for line in data.lines() {
         let move_times:i32 = line.chars().nth(0).unwrap().to_string().parse().unwrap();
-        let crate_from:i32 = line.chars().nth(1).unwrap().to_string().parse().unwrap();
+        let crate_from:usize = line.chars().nth(1).unwrap().to_string().parse().unwrap();
+        let crate_from = crate_from - 1;
         let crate_to:  i32 = line.chars().nth(2).unwrap().to_string().parse().unwrap();
 
         println!("line {line:?} asks to move {move_times:?} crates from {crate_from:?} to {crate_to:?}");
 
         for _ in 0..move_times {
-            let move_buffer = chart_vec[crate_from]; //.chars().last();
-            println!("{move_buffer}");
+            // the move buffer is a copy of the crate that will be moved
+            let move_buffer = chart_vec[crate_from].chars().last();
+            chart_vec[crate_from].to_string().pop();
+            println!("{move_buffer:?}");
         } 
     }
 }
