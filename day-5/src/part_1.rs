@@ -10,7 +10,8 @@ use std::path::Path;
 // [W] [W] [L] [J] [B] [V] [P] [B] [Z]
 // [D] [S] [M] [S] [Z] [W] [J] [T] [G]
 // [T] [L] [Z] [R] [C] [Q] [V] [P] [H]
-//  1   2   3   4   5   6   7   8   9 
+//
+// 1   2   3   4   5   6   7   8   9 
 
 
 fn open_file(path: &Path) -> String {
@@ -40,10 +41,12 @@ pub fn main() {
     let chart_path = Path::new("src/chart.txt");
     let chart = open_file(chart_path);
 
+    println!("{chart}");
+
     let mut chart_vec = vec![];
 
     for line in chart.lines() {
-        chart_vec.push(line)
+        chart_vec.push(line.to_string())
     }
 
     // later replace with let mut chart_vec = vec![chart];
@@ -51,16 +54,29 @@ pub fn main() {
     for line in data.lines() {
         let move_times:i32 = line.chars().nth(0).unwrap().to_string().parse().unwrap();
         let crate_from:usize = line.chars().nth(1).unwrap().to_string().parse().unwrap();
-        let crate_from = crate_from - 1;
-        let crate_to:  i32 = line.chars().nth(2).unwrap().to_string().parse().unwrap();
+        let crate_to:usize = line.chars().nth(2).unwrap().to_string().parse().unwrap();
 
         println!("line {line:?} asks to move {move_times:?} crates from {crate_from:?} to {crate_to:?}");
 
         for _ in 0..move_times {
-            // the move buffer is a copy of the crate that will be moved
-            let move_buffer = chart_vec[crate_from].chars().last();
-            chart_vec[crate_from].to_string().pop();
-            println!("{move_buffer:?}");
+            // the move_buffer is -1 because input is one-based and the vec is zero-based
+            let move_buffer = &chart_vec[crate_from].chars().last();
+            // the last crate is removed
+            chart_vec.get_mut(crate_from).unwrap().pop().unwrap();
+            println!("removed crate = {move_buffer:?} from {crate_from:?}");
+            // the crate is than added to the new place
+            chart_vec.get_mut(crate_to).unwrap().push(move_buffer.unwrap());
+            // println!("added crate = {move_buffer:?} to {crate_to:?}")
         } 
     }
+
+    let mut top = "".to_string();
+
+    for _ in data.lines() {
+        for stack in &chart_vec {
+            top.push(stack.chars().last().unwrap())
+        }
+    }
+
+    println!("{top}");
 }
