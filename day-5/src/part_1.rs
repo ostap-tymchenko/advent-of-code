@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
+use std::str::Chars;
 
 //         [H]     [W] [B]            
 //     [D] [B]     [L] [G] [N]        
@@ -35,7 +36,7 @@ fn open_file(path: &Path) -> String {
 }
 
 pub fn main() {
-    let data_path = Path::new("src/dummy-data.txt");
+    let data_path = Path::new("src/data.txt");
     let data = open_file(data_path);
 
     let chart_path = Path::new("src/chart.txt");
@@ -52,9 +53,12 @@ pub fn main() {
     // later replace with let mut chart_vec = vec![chart];
     
     for line in data.lines() {
-        let move_times:i32 = line.chars().nth(0).unwrap().to_string().parse().unwrap();
-        let crate_from:usize = line.chars().nth(1).unwrap().to_string().parse().unwrap();
-        let crate_to:usize = line.chars().nth(2).unwrap().to_string().parse().unwrap();
+        let i: Vec<&str> = line.split("-").collect();
+
+        let move_times:i32 = i[0].parse().unwrap();
+        let crate_from:usize = i[1].parse().unwrap();
+        let crate_to:usize = i[2].parse().unwrap();
+
 
         println!("line {line:?} asks to move {move_times:?} crates from {crate_from:?} to {crate_to:?}");
 
@@ -62,11 +66,12 @@ pub fn main() {
             // the move_buffer is -1 because input is one-based and the vec is zero-based
             let move_buffer = &chart_vec[crate_from].chars().last();
             // the last crate is removed
-            chart_vec.get_mut(crate_from).unwrap().pop().unwrap();
-            println!("removed crate = {move_buffer:?} from {crate_from:?}");
-            // the crate is than added to the new place
-            chart_vec.get_mut(crate_to).unwrap().push(move_buffer.unwrap());
-            // println!("added crate = {move_buffer:?} to {crate_to:?}")
+            
+            if let Some(x) = chart_vec.get_mut(crate_from) {x.pop();}
+            if let Some(x) = chart_vec.get_mut(crate_to) {x.push(move_buffer);}
+            // chart_vec.get_mut(crate_to).unwrap().push(move_buffer.unwrap_or_default());
+            
+            println!("moved crate = {move_buffer:?} from {crate_from:?} to {crate_to:?}");
         } 
     }
 
