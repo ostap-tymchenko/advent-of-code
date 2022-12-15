@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
-use std::str::Chars;
 
 //         [H]     [W] [B]            
 //     [D] [B]     [L] [G] [N]        
@@ -42,7 +41,15 @@ pub fn main() {
     let chart_path = Path::new("src/chart.txt");
     let chart = open_file(chart_path);
 
-    println!("{chart}");
+    // println!("{chart}");
+    for line in chart.lines() {
+        if line == "" {
+            // nothing
+        } else {
+            println!("{line}")
+        }
+    }
+    println!();
 
     let mut chart_vec = vec![];
 
@@ -50,38 +57,80 @@ pub fn main() {
         chart_vec.push(line.to_string())
     }
 
-    // later replace with let mut chart_vec = vec![chart];
-    
     for line in data.lines() {
-        let i: Vec<&str> = line.split("-").collect();
+        if line != "" {
 
-        let move_times:i32 = i[0].parse().unwrap();
-        let crate_from:usize = i[1].parse().unwrap();
-        let crate_to:usize = i[2].parse().unwrap();
+            let i: Vec<&str> = line.split("-").collect();
+
+            let mut move_times:usize = i[0].parse().unwrap();
+            let crate_from:usize = i[1].parse().unwrap();
+            let crate_to:usize = i[2].parse().unwrap();
+
+            // these 4 lines make sure that there are enough crates to move, and prevents a crash later on if there arent.
+            let mut old_move_times = move_times; 
+            if move_times > chart_vec[crate_from].len() {
+                move_times = chart_vec[crate_from].len() 
+            } 
+
+            if move_times != old_move_times {
+                println!("line {line:?} asks to move {old_move_times:?} crates to be moved but {move_times:?} crates will be moved from {crate_from:?} to {crate_to:?}");
+            } else {
+                println!("line {line:?} asks to move {move_times:?} crates from {crate_from:?} to {crate_to:?}");
+            }
 
 
-        println!("line {line:?} asks to move {move_times:?} crates from {crate_from:?} to {crate_to:?}");
+            for _ in 0..move_times {
+                // we save the var were about to remove to a buffer because this is a move not delete operation
+                let move_buffer = &chart_vec[crate_from].chars().last();
+                // the last crate is removed
+                if let Some(x) = chart_vec.get_mut(crate_from) {x.pop();}
+                // the move buffer than becomes is than saved to where it is moved to
+                if let Some(x) = chart_vec.get_mut(crate_to) {x.push(move_buffer.unwrap());}
+                // chart_vec.get_mut(crate_to).unwrap().push(move_buffer.unwrap_or_default());
+                
+                println!("moved crate = {move_buffer:?} from {crate_from:?} to {crate_to:?}");
+            }
 
-        for _ in 0..move_times {
-            // the move_buffer is -1 because input is one-based and the vec is zero-based
-            let move_buffer = &chart_vec[crate_from].chars().last();
-            // the last crate is removed
-            
-            if let Some(x) = chart_vec.get_mut(crate_from) {x.pop();}
-            if let Some(x) = chart_vec.get_mut(crate_to) {x.push(move_buffer);}
-            // chart_vec.get_mut(crate_to).unwrap().push(move_buffer.unwrap_or_default());
-            
-            println!("moved crate = {move_buffer:?} from {crate_from:?} to {crate_to:?}");
+            let chart_vec_crate_from = &chart_vec[crate_from].to_uppercase();
+            let chart_vec_crate_to = &chart_vec[crate_to].to_uppercase();
+
+            if chart_vec_crate_from == "" {
+                println!("line (removed from) now contains nothing")
+            } else {
+                println!("line (removed from) is now {chart_vec_crate_from}");
+            }
+
+            println!("line (added to) is now {chart_vec_crate_to}");
         } 
     }
 
     let mut top = "".to_string();
 
-    for _ in data.lines() {
-        for stack in &chart_vec {
-            top.push(stack.chars().last().unwrap())
+    for stack in &chart_vec {
+        if stack != "" {
+            if stack == " " {
+                top.push('|');
+            } else {
+                top.push(stack.chars().last().unwrap_or('/'));
+            }
         }
     }
 
-    println!("{top}");
+    let top = top.replace("/", "");
+    let top = top.replace("|", " ");
+    let top = top.to_uppercase();
+
+    print!("\nthe final crate chart looks like:");
+    let mut index = 0;
+    for line in chart_vec {
+        index += 1;
+        let line = line.to_uppercase();
+        print!("{index} ");
+        for char in line.chars() {
+            print!("[{char}]");
+        }
+        println!();
+    }
+
+    println!("\nthe top crates are:\n{top}");
 }
