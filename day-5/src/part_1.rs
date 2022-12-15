@@ -65,6 +65,9 @@ pub fn main() {
             let mut move_times:usize = i[0].parse().unwrap();
             let crate_from:usize = i[1].parse().unwrap();
             let crate_to:usize = i[2].parse().unwrap();
+            
+            let crate_from = crate_from -1;
+            let crate_to = crate_to -1;
 
             // these 4 lines make sure that there are enough crates to move, and prevents a crash later on if there arent.
             let mut old_move_times = move_times; 
