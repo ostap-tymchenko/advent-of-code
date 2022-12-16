@@ -3,5 +3,21 @@
 version = 3
 
 [[package]]
+name = "couleur"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a0080b49644790ed9e23ea80157cb19d6a5b66c459473ae3c88464b807a28989"
+
+[[package]]
 name = "day-5"
 version = "0.1.0"
+dependencies = [
+ "couleur",
+ "ez_colorize",
+]
+
+[[package]]
+name = "ez_colorize"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e13167a0acec3cb3b1d68aeb0cfe2f1700d252a1bdb8d25d9da619b551443ac6"
