@@ -123,7 +123,7 @@ pub fn main() {
     let top = top.replace("|", " ");
     let top = top.to_uppercase();
 
-    print!("\nthe final crate chart looks like:");
+    print!("\nthe final crate chart looks like:\n");
     let mut index = 0;
     for line in chart_vec {
         index += 1;
