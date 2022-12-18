@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
-use colored::*;
+use couleur::{Couleur, Colors};
 
 //         [H]     [W] [B]            
 //     [D] [B]     [L] [G] [N]        
@@ -34,14 +34,8 @@ fn open_file(path: &Path) -> String {
     data
 }
 
-fn dbg_print(severity: &String, messege: &String, from: &String) {
-    if severity == "warn" {
-        println!("{}", format!("{messege} called by {from}").red());
-    } else if severity == "debug" {
-        println!("{}", format!("{messege} called by {from}").yellow());
-    } else {
-        println!("{}", format!("malformed debug: severity: {severity}, messege: {messege}, from: {from}").purple());
-    }
+fn dbg_print (string) {
+
 }
 
 pub fn main() {
@@ -109,8 +103,7 @@ pub fn main() {
                 move_buffer += move_line.pop().unwrap_or('/').to_string().as_str();
             } 
 
-            // println!("move buffer = {move_buffer}");
-            dbg_print("{},{},{}", format!("debug"), format!("move buffer = {move_buffer}"), format!("CORELOGIC"));
+            println!("move buffer = {move_buffer}");
 
             let move_buffer_copy = &move_buffer.to_owned();
 
@@ -200,7 +193,7 @@ pub fn main() {
         println!("\nthe number of crates is the same ✅ ({num_crates_one})")
     } else {
         let error = "NOT the same ❎";
-        println!("\nthe number of crates is {} ({}, {})",error.red() , {num_crates_one}, {num_crates_two})
+        println!("\nthe number of crates is {} ({}, {})",error.coloriser(Colors::Red) , {num_crates_one}, {num_crates_two})
     }
 
     println!("the top crates are: {top}");
