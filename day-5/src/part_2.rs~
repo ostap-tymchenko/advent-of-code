@@ -34,18 +34,20 @@ fn open_file(path: &Path) -> String {
     data
 }
 
-fn dbg_print(severity: &String, messege: &String, from: &String) {
+fn dbg_print(severity: &str, messege: &str, from: &str) {
     if severity == "warn" {
         println!("{}", format!("{messege} called by {from}").red());
     } else if severity == "debug" {
-        println!("{}", format!("{messege} called by {from}").yellow());
+        println!("{}", format!("{messege} called by {from}"));
+    } else if severity == "result"{
+        println!("{}", format!("{messege} called by {from}"));
     } else {
         println!("{}", format!("malformed debug: severity: {severity}, messege: {messege}, from: {from}").purple());
     }
 }
 
 pub fn main() {
-    let data_path = Path::new("src/dummy-data.txt");
+    let data_path = Path::new("src/data.txt");
     let data = open_file(data_path);
 
     let chart_path = Path::new("src/chart.txt");
@@ -101,27 +103,29 @@ pub fn main() {
             // CORELOGIC
 
 
-            // we save the var were about to remove to a buffer because this is a move not delete operation
+            // prereq
             let move_line = &mut chart_vec[crate_from];
             let mut move_buffer = "".to_string();
             
+            // create buffer and remove crates
             for _ in 0..move_times {
                 move_buffer += move_line.pop().unwrap_or('/').to_string().as_str();
             } 
 
-            // println!("move buffer = {move_buffer}");
-            dbg_print("{},{},{}", format!("debug"), format!("move buffer = {move_buffer}"), format!("CORELOGIC"));
+            // reversing the buffer
+            let move_buffer: String = move_buffer.chars().rev().collect();
 
-            let move_buffer_copy = &move_buffer.to_owned();
+            // debug
+            dbg_print("debug", format!("move buffer = [{move_buffer}]").as_str(), "CORELOGIC");
 
-            let response_push = ("pushed +{0} onto {1}", &move_buffer.clone(), &crate_to);
+            // adding crates
+            if let Some(x) = chart_vec.get_mut(crate_to) {x.push_str(&move_buffer);}
 
-            if let Some(x) = chart_vec.get_mut(crate_to) {x.push_str(&move_buffer); println!("{response_push:#?}")}
-            println!("moved crates {} from {crate_from:?} to {crate_to:?}", move_buffer_copy.len());
-
+            // prereq
             let chart_vec_crate_from = &chart_vec[crate_from].to_uppercase();
             let chart_vec_crate_to = &chart_vec[crate_to].to_uppercase();
 
+            // debug
             if chart_vec_crate_from == "" {
                 println!("line (removed from) now contains nothing")
             } else {
@@ -171,7 +175,7 @@ pub fn main() {
 
     let mut num_crates_one = 0;
     for stack in chart_vec_old {
-        for var_crate in stack.chars() {
+        for _ in stack.chars() {
             num_crates_one += 1;
         }
     }
@@ -192,16 +196,52 @@ pub fn main() {
 
     let mut num_crates_two = 0;
     for stack in &chart_vec {
-        for var_crate_two in stack.chars() {
+        for _ in stack.chars() {
             num_crates_two += 1;
         }
     }
+
     if num_crates_one == num_crates_two {
-        println!("\nthe number of crates is the same ✅ ({num_crates_one})")
+        println!("{}", format!("\nthe number of crates is the same ✅ ({num_crates_one})").green())
     } else {
         let error = "NOT the same ❎";
-        println!("\nthe number of crates is {} ({}, {})",error.red() , {num_crates_one}, {num_crates_two})
+        println!("\nthe number of crates is {} ({}, {})", error.red() , {num_crates_one}, {num_crates_two})
     }
 
-    println!("the top crates are: {top}");
+    // let string_alphabet = "abcdefghijklmnopqrstuvwxyz";
+    // let string_alphabet = string_alphabet.to_owned() + &string_alphabet.to_uppercase();
+    // dbg_print("debug", &format!("string_alphabet = {string_alphabet}"), "windown-debuging");
+    //
+    //
+    // let mut old_contains = "".to_string();
+    // for stack in chart_vec_old {
+    //     for var_crate in stack.chars() {
+    //         if string_alphabet.contains(var_crate) {
+    //             old_contains += &var_crate.to_string();
+    //         }
+    //     } 
+    // }
+    //
+    // println!("chart_vec_old = {chart_vec_old:?}");
+    //
+    // let mut do_letters_match = true;
+    // let mut false_called_on = "".to_string();
+    //
+    // for stack in chart_vec_old {
+    //     for char in stack.chars() {
+    //         if chart_vec.contains(&char.to_string()) {
+    //             //nothing            
+    //         } else {
+    //             do_letters_match = false;
+    //             false_called_on += &char.to_string();
+    //         }
+    //     }
+    // } 
+    //
+    // if do_letters_match == false {
+    //     dbg_print("warn", "do_letters_match = false", "windown-debuging");
+    //     println!("not matching = {false_called_on}");
+    // }
+
+    dbg_print("result", format!("the top crates are: {top}").as_str(), "final-result");
 }
