@@ -63,7 +63,7 @@ pub fn main() {
         index += 1;
         buffer += &char.to_string();
 
-        if has_repeated_chars(&buffer) && awnser == 0 && index > 3 {
+        if !has_repeated_chars(&buffer) && awnser == 0 && index > 3 {
             awnser = index;
             println!("awnser reached at index ={index} with buffer ={buffer}");
         }
