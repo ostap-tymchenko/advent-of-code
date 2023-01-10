@@ -31,17 +31,27 @@ fn open_file() -> String {
 pub fn main() {
     let file = open_file();
 
+
+    fn check_top_visibility (file: String) {
+
     let mut last_line: Vec<char> = vec![];
 
-    for line in file.lines() {
-        // if let Some()
-        // if line != last_line { let last_line = line; };
-        for (iter, tree_horizontal_index) in (line).chars().enumerate() {
-            if last_line[iter].to_owned() == tree_horizontal_index {
-                 
+        for line in file.lines() {
+            // this will be for checking if the top is invisible
+            for (iter, tree_horizontal_index) in (line).chars().enumerate() {
+                if !last_line.is_empty() {
+                    let last_line_iter = last_line[iter];
+                    if last_line_iter == tree_horizontal_index {
+                        println!("last_line[iter]: {last_line_iter} == tree_horizontal_index"); 
+                    } else {
+                        println!("last_line[iter]: {last_line_iter} !== tree_horizontal_index");
+                    }
+                }
             }
+            
+            last_line = line.chars().collect();
+            println!("last line = {last_line:?}");
+
         }
-        
-        last_line = vec![line.chars()];
     }
 }        
