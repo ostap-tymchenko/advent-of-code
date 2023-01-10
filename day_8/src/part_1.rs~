@@ -41,52 +41,44 @@ pub fn main() {
 
     println!("{forrest:?}");
 
-    let forrest_copy = forrest.clone();
-    for (column_iter, column) in forrest_copy.iter().enumerate() {
-        for (tree_iter, tree) in column.chars().enumerate() {
-            let tree = tree.to_digit(10).unwrap();
-            println!("tree :{tree}");
-
-            let mut tallest_tree_left = 0;
-            let mut tallest_tree_right = 0;
-            // let mut tallest_tree_left = 0;
-            // let mut tallest_tree_left = 0;
-
-            if tree >= tallest_tree_left {    
-                tallest_tree_left = tree;
-                println!("new tallest tree from left: {tallest_tree_left}");
-            } else {
-                 forrest[column_iter].remove(tree_iter);
-            }
-
-            println!("new forrest: {forrest:?}")
-        }
+    for column in forrest {
+        remove_left(column);
     }
 
 }        
 
-fn remove_left (forrest: Vec<String>) -> Vec<String> {
-    
-    forrest
+
+fn remove_left(column: String) -> String {
+    let mut top_tree = 0;
+    let mut chars: Vec<char> = column.chars().collect();
+    let mut index = 0;
+    while index < chars.len() {
+        let tree = chars[index];
+        let tree = tree.to_digit(10).unwrap();
+        if tree >= top_tree {
+            top_tree = tree;
+            chars.remove(index);
+        }
+        else {
+            index += 1;
+        }
+    }
+    chars.into_iter().collect()
 }
 
-
-// fn check_top_visibility (file: String) {
-//
-//     let mut last_line: Vec<char> = vec![];
-//     for line in file.lines() {
-//         for (iter, tree_horizontal_index) in (line).chars().enumerate() {
-//             if !last_line.is_empty() {
-//                 let last_line_iter = last_line[iter];
-//                 if last_line_iter == tree_horizontal_index {
-//                     println!("last_line[iter]: {last_line_iter} == tree_horizontal_index"); 
-//                 } else {
-//                     println!("last_line[iter]: {last_line_iter} !== tree_horizontal_index");
-//                 }
-//             }
+println!("forest after: {forest}");
+// fn remove_left(column: String) -> String {
+//     let mut column: Vec<char> = column.chars().collect();
+//     let mut top_tree = 0;
+//     let mut removed = vec![];
+//     for (index, &tree) in column.iter().enumerate() {
+//         let tree = tree.to_digit(10).unwrap();
+//         if tree >= top_tree {
+//             top_tree = tree;
+//             removed.push(index);
 //         }
-//         last_line = line.chars().collect();
-//         println!("last line = {last_line:?}");
 //     }
+//     removed.sort();
+//     removed.into_iter().rev().for_each(|i| { column.remove(i); } );
+//     column.into_iter().collect::<String>()
 // }
-//
