@@ -29,7 +29,6 @@ fn open_file() -> String {
 //A tree is visible if all of the other trees between it and an edge of the grid are shorter than it. Only consider trees in the same row or column; that is, only look up, down, left, or right from any given tree.
 
 pub fn main() {
-
     let mut invisible_trees = 0;
     
     let file = open_file();
@@ -41,20 +40,28 @@ pub fn main() {
 
     println!("{forrest:?}");
 
-    for column in forrest {
-        remove_left(column);
+    let mut new_forrest: Vec<String> = Vec::new();
+
+    for column in &forrest {
+        new_forrest.push(remove_left_or_right(column));
+
+        
+        // you need to figure out how to send a reverse of the one above, so its one from the
+        // right. maybe make a new column var?
+        new_forrest.push(remove_left_or_right(column.chars().rev().collect()))
     }
 
+
+    println!("forest after: {:?}", new_forrest);
 }        
 
 
-fn remove_left(column: String) -> String {
+fn remove_left_or_right(column: &String) -> String {
     let mut top_tree = 0;
     let mut chars: Vec<char> = column.chars().collect();
     let mut index = 0;
     while index < chars.len() {
-        let tree = chars[index];
-        let tree = tree.to_digit(10).unwrap();
+        let tree = chars[index].to_digit(10).unwrap();
         if tree >= top_tree {
             top_tree = tree;
             chars.remove(index);
@@ -63,10 +70,12 @@ fn remove_left(column: String) -> String {
             index += 1;
         }
     }
-    chars.into_iter().collect()
+    let output = chars.into_iter().collect();
+    println!("output: {output}");
+    output
 }
 
-println!("forest after: {forest}");
+
 // fn remove_left(column: String) -> String {
 //     let mut column: Vec<char> = column.chars().collect();
 //     let mut top_tree = 0;
