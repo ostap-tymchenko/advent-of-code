@@ -42,19 +42,24 @@ pub fn main() {
 
     let mut new_forrest: Vec<String> = Vec::new();
 
-    for column in &forrest {
-        new_forrest.push(remove_left_or_right(column));
-
-        
-        // you need to figure out how to send a reverse of the one above, so its one from the
-        // right. maybe make a new column var?
-        new_forrest.push(remove_left_or_right(column.chars().rev().collect()))
+    enum Tree_visability {
+        Visible,
+        Invisible,
+        Undecided,
     }
 
+    for column in &forrest {
+        new_forrest.push(remove_left_or_right(column));
+        // let reverse_column = &column.chars().rev().collect::<String>();
+        // new_forrest.push(remove_left_or_right(reverse_column))
+    }
 
     println!("forest after: {:?}", new_forrest);
 }        
 
+// you need to adapt this fn to do both right and left at the same time and integrate this into the
+// rest of the code so that it uses thee Tree_visability enum instead of removing trees. or still
+// remove trees but in a way that actually still works
 
 fn remove_left_or_right(column: &String) -> String {
     let mut top_tree = 0;
@@ -71,23 +76,7 @@ fn remove_left_or_right(column: &String) -> String {
         }
     }
     let output = chars.into_iter().collect();
-    println!("output: {output}");
+    println!("column output: {output}");
     output
 }
 
-
-// fn remove_left(column: String) -> String {
-//     let mut column: Vec<char> = column.chars().collect();
-//     let mut top_tree = 0;
-//     let mut removed = vec![];
-//     for (index, &tree) in column.iter().enumerate() {
-//         let tree = tree.to_digit(10).unwrap();
-//         if tree >= top_tree {
-//             top_tree = tree;
-//             removed.push(index);
-//         }
-//     }
-//     removed.sort();
-//     removed.into_iter().rev().for_each(|i| { column.remove(i); } );
-//     column.into_iter().collect::<String>()
-// }
