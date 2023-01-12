@@ -38,19 +38,21 @@ pub fn main() {
 
     println!("{forrest:?}");
 
-    let mut invisible_left_trees: Vec<String> = Vec::new();
-    let mut invisible_right_trees: String = String::new();
+    let mut invisible_left_trees = String::new();
+    let mut invisible_right_trees = String::new();
     
+    let mut top_up_tree = String::new();
+
     for column in forrest {
         let mut top_left_tree = 0;
         for tree in column.chars() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_left_tree {
                 top_left_tree = tree;
-                invisible_left_trees.push("x".to_string());
-            } else {invisible_left_trees.push(tree.to_string())}    
+                invisible_left_trees.push('x')
+            } else {invisible_left_trees.push_str(&tree.to_string())}    
         }
-    invisible_left_trees.push("\n".to_string());
+        invisible_left_trees.push_str("\n");
 
         let mut top_right_tree = 0;
         for tree in column.chars().rev() {
@@ -60,26 +62,35 @@ pub fn main() {
                 invisible_right_trees.push('x');
             } else {invisible_right_trees.push_str(&tree.to_string())}    
         }
-    
-    invisible_right_trees.push_str("\n");
+        invisible_right_trees.push_str("\n");
+
+        // top_up_tree.push(column.chars().nth(0).unwrap());
+
+        for iter in column.chars().enumerate() {
+        println!("enumeration: {iter:?}");
+        } 
     }
+    println!("top up tree: {top_up_tree}");
 
     let mut tree_format = "".to_string();
-    for tree in invisible_left_trees {
-        tree_format.push(tree.chars().nth(0).unwrap());
-    }
+
+    for column in invisible_left_trees.lines() {
+        let column_buffer = column.chars().collect::<String>();
+        tree_format.push_str(&column_buffer);
+        tree_format.push_str("\n");
+        dbg!(column);
+    } 
 
     tree_format.push_str("\n");
 
     for column in invisible_right_trees.lines() {
         let column_buffer = column.chars().rev().collect::<String>();
-        // let column_buffer = column_buffer.to_owned();
         tree_format.push_str(&column_buffer);
         tree_format.push_str("\n");
         dbg!(column);
     }
 
     // figure ouev}");
-    println!("forest after: \n{tree_format}");
+    println!("forest after: \n\n{tree_format}");
 }        
 
