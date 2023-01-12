@@ -29,8 +29,6 @@ fn open_file() -> String {
 //A tree is visible if all of the other trees between it and an edge of the grid are shorter than it. Only consider trees in the same row or column; that is, only look up, down, left, or right from any given tree.
 
 pub fn main() {
-    let mut invisible_trees = 0;
-    
     let file = open_file();
     let mut forrest: Vec<String> = Vec::new();
 
@@ -40,43 +38,50 @@ pub fn main() {
 
     println!("{forrest:?}");
 
-    let mut new_forrest: Vec<String> = Vec::new();
+    let mut invisible_left_trees: Vec<String> = Vec::new();
+    let mut invisible_right_trees: Vec<String> = Vec::new();
+    
+    for column in forrest {
+        let mut top_left_tree = 0;
+        for tree in column.chars() {
+            let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
+            if tree >= top_left_tree {
+                top_left_tree = tree;
+                invisible_left_trees.push("x".to_string());
+            } else {invisible_left_trees.push(tree.to_string())}    
+        }
+    invisible_left_trees.push("\n".to_string());
 
-    enum Tree_visability {
-        Visible,
-        Invisible,
-        Undecided,
+        let mut top_right_tree = 0;
+        for tree in column.chars().rev() {
+            let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
+            if tree >= top_right_tree {
+                top_right_tree = tree;
+                invisible_right_trees.push("x".to_string());
+            } else {invisible_right_trees.push(tree.to_string())}    
+        }
+    
+    invisible_right_trees.push("\n".to_string());
     }
 
-    for column in &forrest {
-        new_forrest.push(remove_left_or_right(column));
-        // let reverse_column = &column.chars().rev().collect::<String>();
-        // new_forrest.push(remove_left_or_right(reverse_column))
+    let mut tree_format = "".to_string();
+    for tree in invisible_left_trees {
+        tree_format.push(tree.chars().nth(0).unwrap());
     }
 
-    println!("forest after: {:?}", new_forrest);
+    tree_format.push_str("\n");
+
+    let tree_column_rev = "";
+    for tree in invisible_right_trees.iter().rev() {
+        tree_format.push(tree.chars().nth(0).unwrap());
+    }
+
+    // figure out a way to reverse the order of right line printing
+    // and generally fix this area
+    for column in tree_format {
+        tree_column_rev.insert_str(0, column);
+    }
+    println!("{tree_column_rev}");
+    // println!("forest after: {:?}", &invisible_trees);
 }        
-
-// you need to adapt this fn to do both right and left at the same time and integrate this into the
-// rest of the code so that it uses thee Tree_visability enum instead of removing trees. or still
-// remove trees but in a way that actually still works
-
-fn remove_left_or_right(column: &String) -> String {
-    let mut top_tree = 0;
-    let mut chars: Vec<char> = column.chars().collect();
-    let mut index = 0;
-    while index < chars.len() {
-        let tree = chars[index].to_digit(10).unwrap();
-        if tree >= top_tree {
-            top_tree = tree;
-            chars.remove(index);
-        }
-        else {
-            index += 1;
-        }
-    }
-    let output = chars.into_iter().collect();
-    println!("column output: {output}");
-    output
-}
 
