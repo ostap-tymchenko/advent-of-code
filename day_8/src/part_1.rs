@@ -39,7 +39,7 @@ pub fn main() {
     println!("{forrest:?}");
 
     let mut invisible_left_trees: Vec<String> = Vec::new();
-    let mut invisible_right_trees: Vec<String> = Vec::new();
+    let mut invisible_right_trees: String = String::new();
     
     for column in forrest {
         let mut top_left_tree = 0;
@@ -57,11 +57,11 @@ pub fn main() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_right_tree {
                 top_right_tree = tree;
-                invisible_right_trees.push("x".to_string());
-            } else {invisible_right_trees.push(tree.to_string())}    
+                invisible_right_trees.push('x');
+            } else {invisible_right_trees.push_str(&tree.to_string())}    
         }
     
-    invisible_right_trees.push("\n".to_string());
+    invisible_right_trees.push_str("\n");
     }
 
     let mut tree_format = "".to_string();
@@ -71,17 +71,15 @@ pub fn main() {
 
     tree_format.push_str("\n");
 
-    let tree_column_rev = "";
-    for tree in invisible_right_trees.iter().rev() {
-        tree_format.push(tree.chars().nth(0).unwrap());
+    for column in invisible_right_trees.lines() {
+        let column_buffer = column.chars().rev().collect::<String>();
+        // let column_buffer = column_buffer.to_owned();
+        tree_format.push_str(&column_buffer);
+        tree_format.push_str("\n");
+        dbg!(column);
     }
 
-    // figure out a way to reverse the order of right line printing
-    // and generally fix this area
-    for column in tree_format {
-        tree_column_rev.insert_str(0, column);
-    }
-    println!("{tree_column_rev}");
-    // println!("forest after: {:?}", &invisible_trees);
+    // figure ouev}");
+    println!("forest after: \n{tree_format}");
 }        
 
