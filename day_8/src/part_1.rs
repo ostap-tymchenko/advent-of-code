@@ -26,7 +26,7 @@ fn open_file() -> String {
 // GOAL:
 // how many trees are visible from outside the grid?
 //
-//A tree is visible if all of the other trees between it and an edge of the grid are shorter than it. Only consider trees in the same row or column; that is, only look up, down, left, or right from any given tree.
+//A tree is visible if all of the other trees between it and an edge of the grid are shorter than it. Only consider trees in the same row or var_column; that is, only look up, down, left, or right from any given tree.
 
 pub fn main() {
     let file = open_file();
@@ -43,9 +43,9 @@ pub fn main() {
     
     let mut top_up_tree = String::new();
 
-    for column in forrest {
+    for var_column in forrest {
         let mut top_left_tree = 0;
-        for tree in column.chars() {
+        for tree in var_column.chars() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_left_tree {
                 top_left_tree = tree;
@@ -55,7 +55,7 @@ pub fn main() {
         invisible_left_trees.push_str("\n");
 
         let mut top_right_tree = 0;
-        for tree in column.chars().rev() {
+        for tree in var_column.chars().rev() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_right_tree {
                 top_right_tree = tree;
@@ -64,31 +64,32 @@ pub fn main() {
         }
         invisible_right_trees.push_str("\n");
 
-        // top_up_tree.push(column.chars().nth(0).unwrap());
 
-        // this shouldnt be in this loop, it needs to check just one column not all of them
-        for iter in column.chars().enumerate() {
-        println!("enumeration: {iter:?}");
-        } 
+        // top_up_tree.push(var_column.chars().nth(0).unwrap()); 
+        for (iter, first_tree) in var_column.chars().enumerate().nth(0) {
+            println!("{first_tree}");
+            println!("{iter}");
+        }
     }
+    println!("{top_up_tree}");
     println!("top up tree: {top_up_tree}");
 
     let mut tree_format = "".to_string();
 
-    for column in invisible_left_trees.lines() {
-        let column_buffer = column.chars().collect::<String>();
-        tree_format.push_str(&column_buffer);
+    for var_column in invisible_left_trees.lines() {
+        let var_column_buffer = var_column.chars().collect::<String>();
+        tree_format.push_str(&var_column_buffer);
         tree_format.push_str("\n");
-        dbg!(column);
+        dbg!(var_column);
     } 
 
     tree_format.push_str("\n");
 
-    for column in invisible_right_trees.lines() {
-        let column_buffer = column.chars().rev().collect::<String>();
-        tree_format.push_str(&column_buffer);
+    for var_column in invisible_right_trees.lines() {
+        let var_column_buffer = var_column.chars().rev().collect::<String>();
+        tree_format.push_str(&var_column_buffer);
         tree_format.push_str("\n");
-        dbg!(column);
+        dbg!(var_column);
     }
 
     // figure ouev}");
