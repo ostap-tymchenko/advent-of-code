@@ -26,7 +26,7 @@ fn open_file() -> String {
 // GOAL:
 // how many trees are visible from outside the grid?
 //
-//A tree is visible if all of the other trees between it and an edge of the grid are shorter than it. Only consider trees in the same row or var_column; that is, only look up, down, left, or right from any given tree.
+//A tree is visible if all of the other trees between it and an edge of the grid are shorter than it. Only consider trees in the same row or row; that is, only look up, down, left, or right from any given tree.
 
 pub fn main() {
     let file = open_file();
@@ -36,16 +36,16 @@ pub fn main() {
         forrest.push(line.parse().unwrap()); 
     }
 
-    println!("{forrest:?}");
+    // println!("\n{forrest:?}");
 
     let mut invisible_left_trees = String::new();
     let mut invisible_right_trees = String::new();
     
-    let mut top_up_tree = String::new();
+    let mut invisible_up_trees = String::new();
 
-    for var_column in forrest {
+    for (iter_column, row) in forrest.iter().enumerate() {
         let mut top_left_tree = 0;
-        for tree in var_column.chars() {
+        for tree in row.chars() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_left_tree {
                 top_left_tree = tree;
@@ -55,7 +55,7 @@ pub fn main() {
         invisible_left_trees.push_str("\n");
 
         let mut top_right_tree = 0;
-        for tree in var_column.chars().rev() {
+        for tree in row.chars().rev() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_right_tree {
                 top_right_tree = tree;
@@ -63,36 +63,42 @@ pub fn main() {
             } else {invisible_right_trees.push_str(&tree.to_string())}    
         }
         invisible_right_trees.push_str("\n");
-
-
-        // top_up_tree.push(var_column.chars().nth(0).unwrap()); 
-        for (iter, first_tree) in var_column.chars().enumerate().nth(0) {
-            println!("{first_tree}");
-            println!("{iter}");
+        
+        let mut top_up_tree = 0;
+        for tree in forrest.iter().map(|s| s.chars().nth(iter_column).unwrap()).collect::<String>().chars() {
+            println!("up_trees: {tree}");
+            let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
+            if tree >= top_up_tree {
+                top_up_tree = tree;
+                invisible_up_trees.push('x');
+            } else {
+                invisible_up_trees.push_str(&tree.to_string())
+            }
         }
+        println!("SPLIT");
+
+        // println!("first char: {first_char}");
     }
-    println!("{top_up_tree}");
-    println!("top up tree: {top_up_tree}");
 
     let mut tree_format = "".to_string();
 
-    for var_column in invisible_left_trees.lines() {
-        let var_column_buffer = var_column.chars().collect::<String>();
-        tree_format.push_str(&var_column_buffer);
+    for row in invisible_left_trees.lines() {
+        let row_buffer = row.chars().collect::<String>();
+        tree_format.push_str(&row_buffer);
         tree_format.push_str("\n");
-        dbg!(var_column);
+        // dbg!(row);
     } 
 
     tree_format.push_str("\n");
 
-    for var_column in invisible_right_trees.lines() {
-        let var_column_buffer = var_column.chars().rev().collect::<String>();
-        tree_format.push_str(&var_column_buffer);
+    for row in invisible_right_trees.lines() {
+        let row_buffer = row.chars().rev().collect::<String>();
+        tree_format.push_str(&row_buffer);
         tree_format.push_str("\n");
-        dbg!(var_column);
+        // dbg!(row);
     }
 
     // figure ouev}");
-    println!("forest after: \n\n{tree_format}");
+    // println!("\nforest after: \n{tree_format}");
 }        
 
