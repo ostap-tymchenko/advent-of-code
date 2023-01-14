@@ -36,14 +36,14 @@ pub fn main() {
         forrest.push(line.parse().unwrap()); 
     }
 
-    // println!("\n{forrest:?}");
+    println!("\n{forrest:?}");
 
     let mut invisible_left_trees = String::new();
     let mut invisible_right_trees = String::new();
     
     let mut invisible_up_trees = String::new();
 
-    for (iter_column, row) in forrest.iter().enumerate() {
+    for (iter_row, row) in forrest.iter().enumerate() {
         let mut top_left_tree = 0;
         for tree in row.chars() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
@@ -65,8 +65,8 @@ pub fn main() {
         invisible_right_trees.push_str("\n");
         
         let mut top_up_tree = 0;
-        for tree in forrest.iter().map(|s| s.chars().nth(iter_column).unwrap()).collect::<String>().chars() {
-            println!("up_trees: {tree}");
+        for tree in forrest.iter().map(|s| s.chars().nth(iter_row).unwrap()).collect::<String>().chars() {
+            // println!("up_trees: {tree}");
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_up_tree {
                 top_up_tree = tree;
@@ -75,9 +75,7 @@ pub fn main() {
                 invisible_up_trees.push_str(&tree.to_string())
             }
         }
-        println!("SPLIT");
-
-        // println!("first char: {first_char}");
+        invisible_up_trees.push_str("\n");
     }
 
     let mut tree_format = "".to_string();
@@ -98,7 +96,20 @@ pub fn main() {
         // dbg!(row);
     }
 
+    tree_format.push_str("\n");
+
+
+    let mut up_reconstruction_buffer = String::new();
+    for (iter_row, row) in invisible_up_trees.lines().enumerate() {
+        for tree in up_reconstruction_buffer.chars().map(|s| s.chars().nth(iter_row).unwrap()).collect::<String>().chars() {
+
+        }
+    }
+        // let row_buffer = row.chars().collect::<String>();
+        // tree_format.push_str(&row_buffer);
+        // tree_format.push_str("\n");
+
     // figure ouev}");
-    // println!("\nforest after: \n{tree_format}");
+    println!("\nforest after: \n{tree_format}");
 }        
 
