@@ -55,7 +55,7 @@ pub fn main() {
         invisible_left_trees.push_str("\n");
 
         let mut top_right_tree = 0;
-        for tree in row.chars().rev() {
+            for tree in row.chars().rev() {
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_right_tree {
                 top_right_tree = tree;
@@ -99,17 +99,41 @@ pub fn main() {
     tree_format.push_str("\n");
 
 
+    // let mut top_up_tree = 0;
+    // let mut up_reconstruction_buffer = String::new();
+    // for (iter_row, row) in invisible_up_trees.lines().enumerate() {
+    //     let tree = row.chars().nth(iter_row).unwrap();
+    //     let tree = tree.to_digit(10).unwrap_or(0); // this line just turns tree to u32
+    //     if tree >= top_up_tree {
+    //         up_reconstruction_buffer.push('x');
+    //         top_up_tree = tree;
+    //     } else {
+    //         up_reconstruction_buffer.push_str(&tree.to_string())
+    //     }
+    // up_reconstruction_buffer.push_str("\n");
+    // }
+    
+    let mut top_up_tree = 0;
     let mut up_reconstruction_buffer = String::new();
-    for (iter_row, row) in invisible_up_trees.lines().enumerate() {
-        for tree in up_reconstruction_buffer.chars().map(|s| s.chars().nth(iter_row).unwrap()).collect::<String>().chars() {
-
+    for (row_iter, row) in invisible_up_trees.lines().enumerate() {
+        for tree in invisible_up_trees.lines().map(|s| s.chars().nth(row_iter).unwrap()).collect::<String>().chars() {
+            up_reconstruction_buffer.push(tree);
         }
+        up_reconstruction_buffer.push_str("\n");
     }
-        // let row_buffer = row.chars().collect::<String>();
-        // tree_format.push_str(&row_buffer);
-        // tree_format.push_str("\n");
 
-    // figure ouev}");
-    println!("\nforest after: \n{tree_format}");
+    let output:String = up_reconstruction_buffer.split("\n").rev().collect();
+
+    // let mut up_reconstruction: String = up_reconstruction_buffer.lines().rev().collect(); 
+
+    // for (tree_iter, tree) in up_reconstruction.chars().enumerate() {
+    //     if tree_iter % 4 == 0 {
+    //         up_reconstruction.push_str("\n");
+    //     }
+    // }
+
+    println!("invisible_up_trees: \n{invisible_up_trees}");
+    println!("up_reconstruction: \n{output}");
+    println!("tree format: \n{tree_format}");
 }        
 
