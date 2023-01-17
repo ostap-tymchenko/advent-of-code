@@ -36,7 +36,11 @@ pub fn main() {
         forrest.push(line.parse().unwrap()); 
     }
 
-    println!("\n{forrest:?}");
+    println!("{forrest:?}\n");
+    for row in forrest.iter() {
+        println!("{row}"); 
+    }
+    println!("\n");
 
     let mut invisible_left_trees = String::new();
     let mut invisible_right_trees = String::new();
@@ -64,76 +68,76 @@ pub fn main() {
         }
         invisible_right_trees.push_str("\n");
         
+        // let mut top_up_tree = 0;
+        // for tree in forrest.iter().map(|s| s.chars().nth(iter_row).unwrap()).collect::<String>().chars() {
+        //     // println!("up_trees: {tree}");
+        //     let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
+        //     if tree >= top_up_tree {
+        //         top_up_tree = tree;
+        //         invisible_up_trees.push('x');
+        //     } else {
+        //         invisible_up_trees.push_str(&tree.to_string())
+        //     }
+        // }
+        // invisible_up_trees.push_str("\n");
+
         let mut top_up_tree = 0;
-        for tree in forrest.iter().map(|s| s.chars().nth(iter_row).unwrap()).collect::<String>().chars() {
+        println!("forrest: {forrest:?}");
+        // vv line below vv beends to iterate over the lenght of the line not the # of lines;
+        for tree in forrest.iter().map(|s| s.chars().nth(iter_row).unwrap()) {//(|s| s.chars().nth(iter_row).unwrap()).collect::<String>().chars() {
             // println!("up_trees: {tree}");
             let tree = tree.to_digit(10).unwrap(); // this line just turns tree to u32
             if tree >= top_up_tree {
                 top_up_tree = tree;
+                println!("pushing: x");
                 invisible_up_trees.push('x');
             } else {
+                println!("pushing: {tree}");
                 invisible_up_trees.push_str(&tree.to_string())
             }
         }
         invisible_up_trees.push_str("\n");
     }
 
-    let mut tree_format = "".to_string();
+    let mut left_reconstruction = "".to_string();
 
     for row in invisible_left_trees.lines() {
-        let row_buffer = row.chars().collect::<String>();
-        tree_format.push_str(&row_buffer);
-        tree_format.push_str("\n");
+        let row_buffer = row.chars().rev().collect::<String>();
+        left_reconstruction.push_str(&row_buffer);
+        left_reconstruction.push_str("\n");
         // dbg!(row);
     } 
 
-    tree_format.push_str("\n");
+    left_reconstruction.push_str("\n");
+
+    let mut right_reconstruction = "".to_string();
 
     for row in invisible_right_trees.lines() {
         let row_buffer = row.chars().rev().collect::<String>();
-        tree_format.push_str(&row_buffer);
-        tree_format.push_str("\n");
+        right_reconstruction.push_str(&row_buffer);
+        right_reconstruction.push_str("\n");
         // dbg!(row);
     }
 
-    tree_format.push_str("\n");
-
-
-    // let mut top_up_tree = 0;
-    // let mut up_reconstruction_buffer = String::new();
-    // for (iter_row, row) in invisible_up_trees.lines().enumerate() {
-    //     let tree = row.chars().nth(iter_row).unwrap();
-    //     let tree = tree.to_digit(10).unwrap_or(0); // this line just turns tree to u32
-    //     if tree >= top_up_tree {
-    //         up_reconstruction_buffer.push('x');
-    //         top_up_tree = tree;
-    //     } else {
-    //         up_reconstruction_buffer.push_str(&tree.to_string())
-    //     }
-    // up_reconstruction_buffer.push_str("\n");
-    // }
+    right_reconstruction.push_str("\n");
     
-    let mut top_up_tree = 0;
     let mut up_reconstruction_buffer = String::new();
-    for (row_iter, row) in invisible_up_trees.lines().enumerate() {
+    for (row_iter, row_debug) in invisible_up_trees.lines().enumerate() {
         for tree in invisible_up_trees.lines().map(|s| s.chars().nth(row_iter).unwrap()).collect::<String>().chars() {
             up_reconstruction_buffer.push(tree);
+            println!("pushing tree {tree}, in row_iter {row_iter} row {row_debug}")
         }
         up_reconstruction_buffer.push_str("\n");
     }
 
-    let output:String = up_reconstruction_buffer.split("\n").rev().collect();
-
-    // let mut up_reconstruction: String = up_reconstruction_buffer.lines().rev().collect(); 
-
-    // for (tree_iter, tree) in up_reconstruction.chars().enumerate() {
-    //     if tree_iter % 4 == 0 {
-    //         up_reconstruction.push_str("\n");
-    //     }
+    // let mut up_reconstruction = String::new();
+    // for row in up_reconstruction_buffer.lines().rev() {
+    //     up_reconstruction.push_str(row);
+    //     up_reconstruction.push_str("\n");
     // }
 
-    println!("invisible_up_trees: \n{invisible_up_trees}");
-    println!("up_reconstruction: \n{output}");
-    println!("tree format: \n{tree_format}");
+    println!("up_reconstruction_buffer: \n{up_reconstruction_buffer}");
+    println!("left_reconstruction: \n{left_reconstruction}");
+    println!("right_reconstruction: \n{right_reconstruction}");
 }        
 
