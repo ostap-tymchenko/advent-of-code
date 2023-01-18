@@ -27,15 +27,28 @@ pub fn main() {
     let file = open_file();
     let mut forrest: Vec<String> = Vec::new();
 
+    println!("forrest:");
     for line in file.lines() {
         forrest.push(line.parse().unwrap());
+        println!("{line}");
     }
 
-    let right_reconstruction = filter(forrest, true);
-    println!("{right_reconstruction:?}");
-}     
+    let right_reconstruction = filter(&forrest, true);
+    let left_reconstruction = filter(&forrest, false);
+    // the filter function takes a forrest and  a direction, and filters. it can only go left and right.
 
-fn filter(forrest: Vec<String>, from_right: bool) -> Vec<String> {
+    println!("\nright_reconstruction:");
+    for row in right_reconstruction {
+        println!("{row}");
+    }
+
+    println!("\nleft_reconstruction:");
+    for row in left_reconstruction {
+        println!("{row}");
+    }
+}
+
+fn filter(forrest: &Vec<String>, from_right: bool) -> Vec<String> {
 
     let mut output = Vec::<String>::new(); 
     let mut output_buffer = String::new();
@@ -63,9 +76,17 @@ fn filter(forrest: Vec<String>, from_right: bool) -> Vec<String> {
             }
         }
         output_buffer.push_str("\n");
+    }
+
+    if from_right {
         for line in output_buffer.lines() {
             output.push(line.to_string());
         }
-    }
-    output
+    } else {
+        for line in output_buffer.lines() {
+            output.push(line.chars().rev().collect::<String>())
+            }
+        }
+    
+output
 }
