@@ -94,7 +94,6 @@ fn filter_from_left(forrest: &Vec<String>) -> Vec<String> {
             }
         }
         output_buffer.push_str("\n");
-
         for line in output_buffer.lines() {
             output.push(line.chars().rev().collect::<String>())
         }
