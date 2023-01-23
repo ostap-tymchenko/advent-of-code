@@ -33,17 +33,14 @@ pub fn main() {
         println!("{line}");
     }
 
-    // let right_reconstruction = filter_from_right(&forrest); 
-    // let left_reconstruction = filter_from_left(&forrest); 
-    // let top_reconstruction = flip_right(&filter_from_right(&flip_right(&forrest)));
+    let right_reconstruction = filter_from_right(&forrest); 
+    let left_reconstruction = filter_from_left(&forrest); 
+    let top_reconstruction = flip_right(&filter_from_right(&flip_left(&forrest)));
     let bottom_reconstruction = flip_left(&filter_from_right(&flip_right(&forrest)));
 
-    let flip_right_test = flip_right(&forrest);
-    let flip_right_og_test = flip_right(&forrest);
-
-    // display_forrest(&right_reconstruction, "right_reconstruction");
-    // display_forrest(&left_reconstruction, "left_reconstruction");
-    // display_forrest(&top_reconstruction, "top_reconstruction_alt");
+    display_forrest(&right_reconstruction, "right_reconstruction");
+    display_forrest(&left_reconstruction, "left_reconstruction");
+    display_forrest(&top_reconstruction, "top_reconstruction_alt");
     display_forrest(&bottom_reconstruction, "bottom_reconstruction");
 
     display_forrest(&flip_right(&forrest), "flip_right");
@@ -98,15 +95,15 @@ fn flip_right(forrest: &Vec<String>) -> Vec<String> {
     let mut flipped_buffer = vec![String::new(); forrest[0].len()]; 
     for row in forrest.iter() {
         for (tree_iter, _) in row.chars().enumerate() {
-            flipped_buffer[tree_iter].push(row.chars().nth(tree_iter).unwrap_or('F'));
+            flipped_buffer[tree_iter].push(row.chars().rev().nth(tree_iter).unwrap_or('F'));
         } 
     }
 
-    // let mut flipped = Vec::<String>::new();
-    // for line in flipped_buffer.iter().rev() {
-    //     flipped.push(line.to_string());
-    // }
-    flipped_buffer
+    let mut flipped = Vec::<String>::new();
+    for line in flipped_buffer.iter().rev() {
+        flipped.push(line.to_string().chars().rev().collect());
+    }
+    flipped
 }
 
 fn flip_left(forrest: &Vec<String>) -> Vec<String> {
