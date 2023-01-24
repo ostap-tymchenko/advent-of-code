@@ -4,7 +4,7 @@ use std::path::Path;
 
 fn open_file() -> String {
     // Create a path to the desired file
-    let path = Path::new("src/dummy-data.txt");
+    let path = Path::new("src/data.txt");
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
@@ -45,6 +45,21 @@ pub fn main() {
 
     display_forrest(&flip_right(&forrest), "flip_right");
     display_forrest(&flip_left(&forrest), "flip_left"); 
+
+    let new_forrest = forrest_reconstruction(&right_reconstruction, &left_reconstruction, &top_reconstruction, &bottom_reconstruction);
+    display_forrest(&new_forrest, "new forrest");
+    display_forrest(&forrest, "og forrest");
+
+    let mut invisible_trees = 0;
+    for row in new_forrest {
+        for tree in row.chars() {
+            if tree != 'x' && tree != '\n' {
+                invisible_trees += 1;
+            }
+        }
+    }
+
+    println!("invisible_trees: {invisible_trees}");
 }
 
 fn filter_from_right(forrest: &Vec<String>) -> Vec<String> {
@@ -117,8 +132,26 @@ fn flip_left(forrest: &Vec<String>) -> Vec<String> {
 }
 
 fn display_forrest(forrest_reconstruction: &Vec<String>, name: &str) {
-    println!("\n{name}");
-    for row in forrest_reconstruction {
-        println!("{row}");
+    println!("\n |{name}");
+    for (row_iter, row) in forrest_reconstruction.iter().enumerate() {
+        println!("{row_iter}| {row}");
     }
 } 
+
+fn forrest_reconstruction(right_reconstruction: &Vec<String>, left_reconstruction: &Vec<String>, top_reconstruction: &Vec<String>, bottom_reconstruction: &Vec<String>) -> Vec<String> {
+    let mut invisible_forrest = vec![String::new(); right_reconstruction.len()]; 
+    for (x, row) in right_reconstruction.iter().enumerate() {
+        for (y, tree) in row.chars().enumerate() {
+            if access_by_cords(x, y, right_reconstruction) != 'x' && access_by_cords(x, y, left_reconstruction) != 'x' && access_by_cords(x, y, top_reconstruction) != 'x' && access_by_cords(x, y, bottom_reconstruction) !='x' {
+                invisible_forrest[x].push(tree);
+            } else {
+                invisible_forrest[x].push('x');
+            }
+        }
+    }
+invisible_forrest
+}
+
+fn access_by_cords(x: usize, y: usize, forrest: &Vec<String>) -> char {
+    return forrest[x].chars().nth(y).unwrap();
+}
