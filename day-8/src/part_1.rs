@@ -46,20 +46,30 @@ pub fn main() {
     display_forrest(&flip_right(&forrest), "flip_right");
     display_forrest(&flip_left(&forrest), "flip_left"); 
 
-    let new_forrest = forrest_reconstruction(&right_reconstruction, &left_reconstruction, &top_reconstruction, &bottom_reconstruction);
-    display_forrest(&new_forrest, "new forrest");
+    let mut new_forrest = forrest_reconstruction(&right_reconstruction, &left_reconstruction, &top_reconstruction, &bottom_reconstruction);
     display_forrest(&forrest, "og forrest");
+    display_forrest(&new_forrest, "new forrest");
 
     let mut invisible_trees = 0;
-    for row in new_forrest {
+    for row in &new_forrest {
         for tree in row.chars() {
-            if tree != 'x' && tree !='X' && tree != '\n' {
+            if tree != 'x' && tree != '\n' {
                 invisible_trees += 1;
             }
         }
     }
 
-    println!("invisible_trees: {invisible_trees}");
+    let mut visible_trees = 0;
+    for row in &new_forrest {
+        for tree in row.chars() {
+            if tree == 'x' {
+                visible_trees += 1;
+            }
+        }
+    }
+
+    // println!("invisible_trees: {invisible_trees}");
+    println!("\nvisible_trees: {visible_trees}");
 }
 
 fn filter_from_right(forrest: &Vec<String>) -> Vec<String> {
@@ -69,10 +79,7 @@ fn filter_from_right(forrest: &Vec<String>) -> Vec<String> {
         let mut top_tree_hight = 0;
         for tree in row.chars() {
             let tree = tree.to_digit(10).unwrap();
-            if tree == 9 {
-                top_tree_hight = 9;
-                output_buffer.push('X');
-            } else if tree > top_tree_hight {
+            if tree > top_tree_hight || tree == 0 {
                 top_tree_hight = tree;
                 output_buffer.push('x');
             } else {
@@ -94,10 +101,7 @@ fn filter_from_left(forrest: &Vec<String>) -> Vec<String> {
         let mut top_tree_hight = 0;
         for tree in row.chars().rev() {
             let tree = tree.to_digit(10).unwrap();
-            if tree == 9 {
-                top_tree_hight = 9;
-                output_buffer.push('X');
-            } else if tree > top_tree_hight {
+            if tree > top_tree_hight || tree == 0 {
                 top_tree_hight = tree;
                 output_buffer.push('x');
             } else {
@@ -154,14 +158,16 @@ fn forrest_reconstruction(right_reconstruction: &Vec<String>, left_reconstructio
         for (y, tree) in row.chars().enumerate() {
             if access_by_cords(x, y, right_reconstruction) != 'x' && access_by_cords(x, y, left_reconstruction) != 'x' && access_by_cords(x, y, top_reconstruction) != 'x' && access_by_cords(x, y, bottom_reconstruction) !='x' {
                 invisible_forrest[x].push(tree);
-            } else if access_by_cords(x, y, right_reconstruction) == 'X' && access_by_cords(x, y, left_reconstruction) == 'X' && access_by_cords(x, y, top_reconstruction) == 'X' && access_by_cords(x, y, bottom_reconstruction) =='X' {
-                invisible_forrest[x].push('X');
             } else {
                 invisible_forrest[x].push('x');
             }
         }
     }
-invisible_forrest
+
+invisible_forrest[0] = "x".repeat(invisible_forrest[0].len()); 
+let forrest_len = invisible_forrest.len() -1;
+invisible_forrest[forrest_len] = "x".repeat(invisible_forrest[invisible_forrest.len()-1].len());
+return invisible_forrest;
 }
 
 fn access_by_cords(x: usize, y: usize, forrest: &Vec<String>) -> char {
