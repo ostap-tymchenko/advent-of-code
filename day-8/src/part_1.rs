@@ -24,6 +24,9 @@ fn open_file() -> String {
 }
 
 pub fn main() {
+
+    // 4498 is to high
+
     let file = open_file();
     let mut forrest: Vec<String> = Vec::new();
 
@@ -43,6 +46,7 @@ pub fn main() {
     let new_forrest = forrest_reconstruction(&right_reconstruction, &left_reconstruction, &top_reconstruction, &bottom_reconstruction);
     // display_forrest(&forrest, "og forrest");
     display_forrest(&new_forrest, "new forrest");
+    // display_forrest(&left_reconstruction, "filter from left:");
 
     // let mut invisible_trees = 0;
     // for row in &new_forrest {
@@ -69,11 +73,11 @@ pub fn main() {
 fn filter_from_right(forrest: &Vec<String>) -> Vec<String> {
     let mut output = Vec::<String>::new(); 
     let mut output_buffer = String::new();
-    for (_, row) in forrest.iter().enumerate() {
+    for (row_iter, row) in forrest.iter().enumerate() {
         let mut top_tree_hight = 0;
         for tree in row.chars() {
             let tree = tree.to_digit(10).unwrap();
-            if tree > top_tree_hight || tree == 0 {
+            if tree > top_tree_hight || row_iter == 0 || row_iter == forrest.len() -1 {
                 top_tree_hight = tree;
                 output_buffer.push('x');
             } else {
@@ -91,11 +95,11 @@ fn filter_from_right(forrest: &Vec<String>) -> Vec<String> {
 fn filter_from_left(forrest: &Vec<String>) -> Vec<String> {
     let mut output = Vec::<String>::new(); 
     let mut output_buffer = String::new();
-    for (_, row) in forrest.iter().enumerate() {
+    for (row_iter, row) in forrest.iter().enumerate() {
         let mut top_tree_hight = 0;
         for tree in row.chars().rev() {
             let tree = tree.to_digit(10).unwrap();
-            if tree > top_tree_hight || tree == 0 {
+            if tree > top_tree_hight || row_iter == 0 || row_iter == forrest.len() -1{
                 top_tree_hight = tree;
                 output_buffer.push('x');
             } else {

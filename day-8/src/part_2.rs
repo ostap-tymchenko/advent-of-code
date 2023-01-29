@@ -23,6 +23,7 @@ fn open_file() -> String {
     data
 }
 
+
 pub fn main() {
     let file = open_file();
     let mut forrest: Vec<String> = Vec::new();
@@ -30,36 +31,46 @@ pub fn main() {
     println!("forrest:");
     for line in file.lines() {
         forrest.push(line.parse().unwrap());
-        println!("{line}");
     }
 
-    let right_reconstruction = filter_from_right(&forrest); 
-    let left_reconstruction = filter_from_left(&forrest); 
-    let top_reconstruction = flip_right(&filter_from_right(&flip_left(&forrest)));
-    let bottom_reconstruction = flip_left(&filter_from_right(&flip_right(&forrest)));
+    // display_forrest(&forrest, "og_forrest");
 
-    display_forrest(&right_reconstruction, "right_reconstruction");
-    display_forrest(&left_reconstruction, "left_reconstruction");
-    display_forrest(&top_reconstruction, "top_reconstruction_alt");
-    display_forrest(&bottom_reconstruction, "bottom_reconstruction");
+    // let right_reconstruction = filter_from_right(&forrest); 
+    // let left_reconstruction = filter_from_left(&forrest); 
+    // let top_reconstruction = flip_right(&filter_from_right(&flip_left(&forrest)));
+    // let bottom_reconstruction = flip_left(&filter_from_right(&flip_right(&forrest)));
+    //
+    // display_forrest(&new_forrest, "new forrest");
+    //
+    // for row in forrest.iter() {
+    //     for (tree_iter, tree) in row.chars().enumerate() {
+    //         for (side, _) in (0..3).enumerate() {
+    //             // order: left, top, right, down
+    //             if side == 0 {
+    //                 for row[0..tree_iter].chars().rev()
+    //                  
+    //             }
+    //         }
+    //     } 
+    // }
 
-    display_forrest(&flip_right(&forrest), "flip_right");
-    display_forrest(&flip_left(&forrest), "flip_left"); 
-
-    let new_forrest = forrest_reconstruction(&right_reconstruction, &left_reconstruction, &top_reconstruction, &bottom_reconstruction);
-    display_forrest(&new_forrest, "new forrest");
-    display_forrest(&forrest, "og forrest");
-
-    let mut invisible_trees = 0;
-    for row in new_forrest {
-        for tree in row.chars() {
-            if tree != 'x' && tree !='X' && tree != '\n' {
-                invisible_trees += 1;
+    for row in forrest.iter() {
+        println!("considering: {row}");
+        let mut from_left_top = 0;
+        let mut from_left_concurent_top = 0;
+        for (tree_iter, tree) in row.chars().enumerate() {
+            println!("tree: {tree}");
+            let tree = tree.to_digit(10).unwrap();
+            if tree >= from_left_top {
+                from_left_top = tree;
             }
-        }
-    }
 
-    println!("invisible_trees: {invisible_trees}");
+            for _ in row[0..from_left_top].chars() {
+                from_left_concurent_top += 1;
+            }
+        } 
+        println!("from_left_top: {from_left_top}\nfrom_left_concurent_top: {from_left_concurent_top}");
+    }
 }
 
 fn filter_from_right(forrest: &Vec<String>) -> Vec<String> {
@@ -69,10 +80,7 @@ fn filter_from_right(forrest: &Vec<String>) -> Vec<String> {
         let mut top_tree_hight = 0;
         for tree in row.chars() {
             let tree = tree.to_digit(10).unwrap();
-            if tree == 9 {
-                top_tree_hight = 9;
-                output_buffer.push('X');
-            } else if tree >= top_tree_hight {
+            if tree > top_tree_hight || row_iter == 0 || row_iter == forrest.len() -1 {
                 top_tree_hight = tree;
                 output_buffer.push('x');
             } else {
@@ -94,10 +102,7 @@ fn filter_from_left(forrest: &Vec<String>) -> Vec<String> {
         let mut top_tree_hight = 0;
         for tree in row.chars().rev() {
             let tree = tree.to_digit(10).unwrap();
-            if tree == 9 {
-                top_tree_hight = 9;
-                output_buffer.push('X');
-            } else if tree >= top_tree_hight {
+            if tree > top_tree_hight || row_iter == 0 || row_iter == forrest.len() -1{
                 top_tree_hight = tree;
                 output_buffer.push('x');
             } else {
@@ -154,14 +159,16 @@ fn forrest_reconstruction(right_reconstruction: &Vec<String>, left_reconstructio
         for (y, tree) in row.chars().enumerate() {
             if access_by_cords(x, y, right_reconstruction) != 'x' && access_by_cords(x, y, left_reconstruction) != 'x' && access_by_cords(x, y, top_reconstruction) != 'x' && access_by_cords(x, y, bottom_reconstruction) !='x' {
                 invisible_forrest[x].push(tree);
-            } else if access_by_cords(x, y, right_reconstruction) == 'X' && access_by_cords(x, y, left_reconstruction) == 'X' && access_by_cords(x, y, top_reconstruction) == 'X' && access_by_cords(x, y, bottom_reconstruction) =='X' {
-                invisible_forrest[x].push('X');
             } else {
                 invisible_forrest[x].push('x');
             }
         }
     }
-invisible_forrest
+
+invisible_forrest[0] = "x".repeat(invisible_forrest[0].len()); 
+let forrest_len = invisible_forrest.len() -1;
+invisible_forrest[forrest_len] = "x".repeat(invisible_forrest[invisible_forrest.len()-1].len());
+return invisible_forrest;
 }
 
 fn access_by_cords(x: usize, y: usize, forrest: &Vec<String>) -> char {
