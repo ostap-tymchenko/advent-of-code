@@ -22,12 +22,18 @@ fn open_file(file_path: &str) -> String {
     data
 }
 
-fn parse(input_data:String) -> 
+fn parse(input_data:String) {
+    for line in input_data.split('\n').collect() {
+        line.chars().parse::<i32>().collect();
+    }
+    return 
+} 
 
 pub fn main() {
-    let file = open_file("src/dummy-data.txt");
+    let forrest = parse(open_file("src/dummy-data.txt"));
 
-    let forrest: Vec<String> = file.split('\n').map(|x| x.to_string()).collect();
+    // let forrest: Vec<String> = file.split('\n').map(|x| x.to_string()).collect();
+    
     display_forrest(&forrest, "input"); 
 
     // for row in forrest {
