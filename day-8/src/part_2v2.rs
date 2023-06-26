@@ -25,27 +25,22 @@ fn open_file(file_path: &str) -> String {
 fn parse(input_data:String) -> Vec<Vec<i8>> {
     let mut parsed_forrest: Vec<Vec<i8>> = Vec::new();
     for line in input_data.split('\n') {
-        // dbg!(line);
         // forrest.push(vec![(line.chars().map(|c| c.to_digit(10).unwrap()).sum::<u32>() as i8)]);
         let mut parsed_line:Vec<i8> = Vec::new();
         for number in line.chars() {
             parsed_line.push(number.to_digit(10).unwrap() as i8);
         }
-        parsed_forrest.push(parsed_line);
+        if !parsed_line.is_empty() {
+            parsed_forrest.push(parsed_line);
+        }
     }
-
-    dbg!(&parsed_forrest);
     parsed_forrest
 } 
 
 pub fn main() {
     let forrest = parse(open_file("src/dummy-data.txt"));
-    // display_forrest(forrest, "Test forrest one");
-
-    // let forrest: Vec<String> = file.split('\n').map(|x| x.to_string()).collect();
+    // dbg!(&forrest);
     
-    // display_forrest(&forrest, "input"); 
-
     // for row in forrest {
     //     for considered_tree in row.chars() {
     //         let considered_tree = considered_tree.try_into().unwrap();
@@ -65,11 +60,20 @@ pub fn main() {
     //     for (y, tree) in row.chars().enumerate() {
     //         // println!("x:{x}, row:{row}, y:{y}, tree:{tree}")
     //         // println!("row {x} column {y} is {}", check_height(x, y, &forrest));
-
-
-    //         
-    //     }
-    // }
+    
+    for (x, row) in forrest.iter().enumerate() {
+        // dbg!(row);
+        for (y, tree) in row.iter().enumerate() {
+            // dbg!(x, y, tree);
+            let mut counter = 0;
+            loop {
+                counter += 1;
+                if check_height(x+counter, y+counter, &forrest) >= tree {
+                    break;
+                }
+            }
+        }
+    }
 }
 
 // fn calc_senic_score(x: usize, y:usize, forrest: &Vec<String>) {
@@ -83,18 +87,6 @@ pub fn main() {
 //     }
 // }
 
-fn check_height(x: usize, y:usize, forrest: &Vec<String>) -> char {
-    forrest[x].chars().nth(y).unwrap()
+fn check_height(x: i8, y: i8, forrest: &Vec<Vec<i8>>) -> char {
+    forrest[x]
 }
-
-fn display_forrest(forrest: Vec<Vec<i8>>, name: &str) {
-    println!("\n | {name}");
-    for row in forrest.iter() {
-            // The different spacing is on pourpose in 
-            // order to get a cleaner formated output
-            // println!("{row_iter}|  {row}");
-            dbg!(row);
-            // println!("{row_iter}| {row}");
-            dbg!(row);
-    }
-} 
