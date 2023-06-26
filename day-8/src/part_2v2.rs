@@ -36,19 +36,18 @@ fn parse(input_data:String) -> Vec<Vec<i8>> {
     parsed_forrest
 }
 
-enum CardinalDirection {
-    North,
-    South,
-    West,
-    East
-}
-
-struct Directions {
-    heading: CardinalDirection,
-    x: 
-}
-
 pub fn main() {
+
+    #[derive(Debug)]
+    enum Directions {
+        NORTH,
+        WEST,
+        SOUTH,
+        EAST
+    }
+
+    let directions = [Directions::NORTH, Directions::WEST, Directions::SOUTH, Directions::EAST];
+
     let forrest = parse(open_file("src/dummy-data.txt"));
     
     let top_scenic_score = 0;
@@ -56,12 +55,13 @@ pub fn main() {
     for (x, row) in forrest.iter().enumerate() {
         for (y, tree) in row.iter().enumerate() {
             let scenic_score = 1;
-            for direction in Directions {
-                loop {
-                    if forrest[x][y]
+            for direction in &directions{
+                let mut iter = 0;
+                dbg!(&direction);
+                // loop {
+                //     iter += 1;
 
-
-                }
+                // }
             }
         }
     } // end of logic loop
