@@ -25,7 +25,6 @@ fn open_file(file_path: &str) -> String {
 fn parse(input_data:String) -> Vec<Vec<i8>> {
     let mut parsed_forrest: Vec<Vec<i8>> = Vec::new();
     for line in input_data.split('\n') {
-        // forrest.push(vec![(line.chars().map(|c| c.to_digit(10).unwrap()).sum::<u32>() as i8)]);
         let mut parsed_line:Vec<i8> = Vec::new();
         for number in line.chars() {
             parsed_line.push(number.to_digit(10).unwrap() as i8);
@@ -35,58 +34,35 @@ fn parse(input_data:String) -> Vec<Vec<i8>> {
         }
     }
     parsed_forrest
-} 
+}
+
+enum CardinalDirection {
+    North,
+    South,
+    West,
+    East
+}
+
+struct Directions {
+    heading: CardinalDirection,
+    x: 
+}
 
 pub fn main() {
     let forrest = parse(open_file("src/dummy-data.txt"));
-    // dbg!(&forrest);
     
-    // for row in forrest {
-    //     for considered_tree in row.chars() {
-    //         let considered_tree = considered_tree.try_into().unwrap();
-    //         let mut scenic_score = 0;
-    //         for (iter, very_scenic_tree) in row.chars().enumerate() {
-    //             if very_scenic_tree >= considered_tree {
-    //                 if scenic_score != 0 {
-    //                     scenic_score = scenic_score * iter
-    //                 }
-    //             } 
-    //         }
+    let top_scenic_score = 0;
 
-    //     }
-    // }
-    
-    // for (x, row) in forrest.iter().enumerate() {
-    //     for (y, tree) in row.chars().enumerate() {
-    //         // println!("x:{x}, row:{row}, y:{y}, tree:{tree}")
-    //         // println!("row {x} column {y} is {}", check_height(x, y, &forrest));
-    
     for (x, row) in forrest.iter().enumerate() {
-        // dbg!(row);
         for (y, tree) in row.iter().enumerate() {
-            // dbg!(x, y, tree);
-            let mut counter = 0;
-            loop {
-                counter += 1;
-                if check_height(x+counter, y+counter, &forrest) >= tree {
-                    break;
+            let scenic_score = 1;
+            for direction in Directions {
+                loop {
+                    if forrest[x][y]
+
+
                 }
             }
         }
-    }
-}
-
-// fn calc_senic_score(x: usize, y:usize, forrest: &Vec<String>) {
-//     let center_height = check_height(x, y, forrest);
-//     let mut counter: usize = 0;
-//     loop {
-//         counter += 1;
-//         if !check_height(x+counter, y+counter, forrest) >= center_height {
-//             break;
-//         }
-//     }
-// }
-
-fn check_height(x: i8, y: i8, forrest: &Vec<Vec<i8>>) -> char {
-    forrest[x]
-}
+    } // end of logic loop
+} // end of main fn
