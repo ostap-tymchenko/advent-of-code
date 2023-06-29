@@ -1,6 +1,8 @@
 use std::path::Path;
 use std::fs::File;
 use std::io::Read;
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
 
 fn open_file(file_path: &str) -> String {
     let file_path = Path::new(file_path);
@@ -22,64 +24,82 @@ fn open_file(file_path: &str) -> String {
     data
 }
 
-fn parse(input_data:String) -> 
+fn parse(input_data:String) -> Vec<Vec<i8>> {
+    let mut parsed_forrest: Vec<Vec<i8>> = Vec::new();
+    for line in input_data.split('\n') {
+        let mut parsed_line:Vec<i8> = Vec::new();
+        for number in line.chars() {
+            parsed_line.push(number.to_digit(10).unwrap() as i8);
+        }
+        if !parsed_line.is_empty() {
+            parsed_forrest.push(parsed_line);
+        }
+    }
+    parsed_forrest
+}
+
+#[derive(Debug, EnumIter, PartialEq)]
+enum CardinalDirections {
+    NORTH,
+    WEST,
+    SOUTH,
+    EAST
+}
 
 pub fn main() {
-    let file = open_file("src/dummy-data.txt");
+    let forrest = parse(open_file("src/dummy-data.txt"));
+    let mut top_scenic_score = 0;
 
-    let forrest: Vec<String> = file.split('\n').map(|x| x.to_string()).collect();
-    display_forrest(&forrest, "input"); 
-
-    // for row in forrest {
-    //     for considered_tree in row.chars() {
-    //         let considered_tree = considered_tree.try_into().unwrap();
-    //         let mut scenic_score = 0;
-    //         for (iter, very_scenic_tree) in row.chars().enumerate() {
-    //             if very_scenic_tree >= considered_tree {
-    //                 if scenic_score != 0 {
-    //                     scenic_score = scenic_score * iter
-    //                 }
-    //             } 
-    //         }
-
-    //     }
-    // }
-    
+    println!("reached 1");
     for (x, row) in forrest.iter().enumerate() {
-        for (y, tree) in row.chars().enumerate() {
-            // println!("x:{x}, row:{row}, y:{y}, tree:{tree}")
-            // println!("row {x} column {y} is {}", check_height(x, y, &forrest));
+        for (y, tree) in row.iter().enumerate() {
+            let mut scenic_score = 1;
+            for direction in CardinalDirections::iter(){
+                let mut iter: usize = 0;
+                loop {
+                    println!("reached 2");
+                    iter += 1;
+                    match forrest.get(calc_offset(&iter, &direction, x)) { // checks if x is in bounds
+                        Some(x_in_bounds) => {
+                            match x_in_bounds.get(y) { // checks if y is in bounds
+                                Some(y_in_bounds) => {
+                                    if !y_in_bounds >= *tree {
+                                        scenic_score = scenic_score * iter;
+                                        break;
+                                    }
+                                }
+                                None => {
+                                    scenic_score = scenic_score * iter;
+                                    break;
+                                }
+                            }
+                        } None => {
+                            scenic_score = scenic_score * iter;
+                            break;
+                        }
+                    }
+                } 
+            } 
+            if scenic_score > top_scenic_score {
+                top_scenic_score = scenic_score;
+            }
+        } 
+    } 
 
-
-            
-        }
-    }
-}
-
-fn calc_senic_score(x: usize, y:usize, forrest: &Vec<String>) {
-    let center_height = check_height(x, y, forrest);
-    let mut counter: usize = 0;
-    loop {
-        counter += 1;
-        if !check_height(x+counter, y+counter, forrest) >= center_height {
-            break;
-        }
-    }
-}
-
-fn check_height(x: usize, y:usize, forrest: &Vec<String>) -> char {
-    forrest[x].chars().nth(y).unwrap()
-}
-
-fn display_forrest(forrest_reconstruction: &Vec<String>, name: &str) {
-    println!("\n | {name}");
-    for (row_iter, row) in forrest_reconstruction.iter().enumerate() {
-        if row_iter < 10 {
-            // The different spacing is on pourpose in 
-            // order to get a cleaner formated output
-            println!("{row_iter}|  {row}");
-        } else {
-            println!("{row_iter}| {row}");
-        }
-    }
+    println!("{top_scenic_score}");
 } 
+
+// fn calc_offset (iter: &usize, direction:&CardinalDirections, x_or_y: usize) -> usize {
+//     println!("reached calc_offset");
+//     if *direction == CardinalDirections::NORTH {
+//         return x_or_y+iter; //x only
+//     } else if *direction == CardinalDirections::SOUTH {
+//         return x_or_y-iter; // only
+//     } else if *direction == CardinalDirections::EAST {
+//         return x_or_y+iter; //y only
+//     } else if *direction == CardinalDirections::WEST {
+//         return x_or_y-iter; // y only
+//     } else {
+//         panic!("unreachable state reached");
+//     }
+// }

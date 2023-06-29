@@ -38,62 +38,42 @@ fn parse(input_data:String) -> Vec<Vec<i8>> {
     parsed_forrest
 }
 
+#[derive(Debug, EnumIter, PartialEq)]
+enum CardinalDirections {
+    NORTH,
+    WEST,
+    SOUTH,
+    EAST
+}
+
 pub fn main() {
-
-    #[derive(Debug, EnumIter)]
-    enum Directions {
-        NORTH,
-        WEST,
-        SOUTH,
-        EAST
-    }
-
     let forrest = parse(open_file("src/dummy-data.txt"));
-    
-    let mut top_scenic_score: i32;
+    let mut top_scenic_score = 0;
 
+    println!("reached 1");
     for (x, row) in forrest.iter().enumerate() {
         for (y, tree) in row.iter().enumerate() {
             let mut scenic_score = 1;
-            for direction in Directions::iter(){
-                let mut iter = 0;
-                dbg!(&direction);
-                loop {
-                    iter += 1;
-                    // if !forrest[x+iter][y] >= *tree {
-                    //     scenic_score = scenic_score * iter;
-                    //     break;
-                    // }
-                    // match forrest.get(x+iter).get(y) {
-                    //     Some(height) => {
-                    //         if !height >= tree {
-                    //             scenic_score = scenic_score * iter;
-                    //             break;
-                    //         }
-                    //     } None => {
-
-                    //     }
-                    // } 
-                    
-                    match forrest.get(x+iter) { // checks if x is in bounds
-                        Some(x_in_bounds) => {
-                            match x_in_bounds.get(y) { // checks if y is in bounds
-                                Some(y_in_bounds) => {
-                                    if !y_in_bounds >= *tree {
-                                        scenic_score = scenic_score * iter;
-                                        break;
-                                    }
-                                }
-                                None => {
-                                    todo!() // TODO
-                                }
+            for direction in CardinalDirections::iter(){
+                if direction == CardinalDirections::NORTH {
+                    let mut iter: usize = 0;
+                    loop {
+                        iter += 1;
+                        match forrest.get(x+iter) {
+                            Some(north_tree) => {
+                            if north_tree[y] >= tree {
+                                scenic_score = scenic_score * *iter;
+                                break;
                             }
-                        } None => {
-                            todo!(); // TODO
-                        }
+                        } None => 
                     }
-                } 
+                }
             } 
+            if scenic_score > top_scenic_score {
+                top_scenic_score = scenic_score;
+            }
         } 
     } 
+
+    println!("{top_scenic_score}");
 } 
