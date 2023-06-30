@@ -50,30 +50,53 @@ pub fn main() {
     let forrest = parse(open_file("src/dummy-data.txt"));
     let mut top_scenic_score = 0;
 
-    println!("reached 1");
-    for (x, row) in forrest.iter().enumerate() {
-        for (y, tree) in row.iter().enumerate() {
-            let mut scenic_score = 1;
-            for direction in CardinalDirections::iter(){
-                if direction == CardinalDirections::NORTH {
-                    let mut iter: usize = 0;
-                    loop {
-                        iter += 1;
-                        match forrest.get(x+iter) {
-                            Some(north_tree) => {
-                            if north_tree[y] >= tree {
-                                scenic_score = scenic_score * *iter;
-                                break;
-                            }
-                        } None => 
-                    }
-                }
-            } 
-            if scenic_score > top_scenic_score {
-                top_scenic_score = scenic_score;
-            }
-        } 
-    } 
+    // for (x, row) in forrest.iter().enumerate() {
+    //     for (y, tree) in row.iter().enumerate() {
+    //         let mut scenic_score = 1;
+    //         for direction in CardinalDirections::iter(){
+    //             if direction == CardinalDirections::NORTH {
+    //                 let mut iter: usize = 0;
+    //                 loop {
+    //                     iter += 1;
+    //                     match forrest.get(x+iter) {
+    //                         Some(north_tree) => {
+    //                         if north_tree[y] >= tree {
+    //                             scenic_score = scenic_score * *iter;
+    //                             break;
+    //                         }
+    //                     } None => 
+    //                 }
+    //             }
+    //         } 
+    //         if scenic_score > top_scenic_score {
+    //             top_scenic_score = scenic_score;
+    //         }
+    //     } 
+    // } 
 
-    println!("{top_scenic_score}");
-} 
+    dbg!(&forrest[2][2],&forrest[3][2],&forrest[4][2]);
+    
+    // for (x, row) in forrest.iter().enumerate() {
+    //     for (y, tree) in row.iter().enumerate() {
+    //         let mut scenic_score = 1;
+    //         for direction in CardinalDirections::iter(){
+    //             println!("reached x:{x}, y:{y}, direction:{direction:?}");
+    //             // let south_iter = (x..0).len();
+    //             if direction == CardinalDirections::NORTH {
+    //                 dbg!(x..0);
+    //                 // for considered_tree in &forrest[0..=y][x] {
+    //                     // dbg!(considered_tree);
+    //                 // }
+    //             }
+    //         } 
+    //         if scenic_score > top_scenic_score {
+    //             top_scenic_score = scenic_score;
+    //         }
+    //     } 
+    // }
+    // println!("{top_scenic_score}");
+}
+
+fn data_between_two_cords (matrix: Vec<Vec<T>>, x1: usize, y1: usize, x2: usize, y2: usize) -> Vec<T> {
+
+}
