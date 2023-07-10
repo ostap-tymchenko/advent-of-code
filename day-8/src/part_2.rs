@@ -19,6 +19,7 @@ fn open_file(file_path: &str) -> String {
     match file.read_to_string(&mut data) {
         Err(why) => panic!("couldn't read {}: {}", display, why),
         Ok(_) => print!("{} contains: data\n", display),
+        Ok(_) => println!("{display} contains: data"),
     }
 
     data
