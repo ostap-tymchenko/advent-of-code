@@ -1,2 +1,2 @@
-# advent of code 2022 
-### 7/25
+## !Moved -> https://github.com/ostap-tymchenko/aoc
+This repo is ***depricated***
