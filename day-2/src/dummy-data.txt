@@ -1,7 +1,0 @@
-B Z
-C X
-A X
-C X
-C X
-C X
-C Y
