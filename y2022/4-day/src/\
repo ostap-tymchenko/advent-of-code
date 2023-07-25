@@ -1,0 +1,21 @@
+use std::{fs, path::Path};
+use itertools::Itertools;
+
+fn read_data(data_path: &std::path::Path) -> String {
+    fs::read_to_string(&data_path).expect("data parse fail")
+}
+
+fn part_1() {
+    let data = read_data(Path::new("./data.txt"));
+    for line in data.lines() {
+        let tup2 = line.split(',').collect();
+        let mut tup = line.split(',');
+        let a = tup.next();
+        let b = tup.next();
+    }
+
+}
+
+pub fn main () {
+    part_1()
+}
