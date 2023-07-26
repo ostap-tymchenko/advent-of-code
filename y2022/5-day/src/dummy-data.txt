@@ -1,7 +1,9 @@
-1-1-6
-6-6-7
-13-7-6
-2-4-5
-1-4-3
-5-9-8
-1-9-8
+    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2
