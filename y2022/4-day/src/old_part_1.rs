@@ -24,7 +24,6 @@ fn open_file() -> String {
     data
 }
 
-
 pub fn main() {
     let file = open_file();
     let mut totally_overlapping_sets = 0;
@@ -34,7 +33,7 @@ pub fn main() {
         let mut end1 = "";
         let mut start2 = "";
         let mut end2 = "";
-        
+
         let mut half_iterator = 0;
         for half in line.split(",") {
             half_iterator += 1;
@@ -42,7 +41,7 @@ pub fn main() {
             let mut quart_iterator = 0;
 
             for quart in half.split("-") {
-                quart_iterator += 1; 
+                quart_iterator += 1;
                 // dbg!(quart, quart_iterator);
 
                 // setting the start and end boundries of the first half
@@ -55,13 +54,13 @@ pub fn main() {
                         unreachable!();
                     }
                 } else if half_iterator == 2 {
-                     if quart_iterator == 1 {
+                    if quart_iterator == 1 {
                         start2 = quart;
                     } else if quart_iterator == 2 {
                         end2 = quart;
                     } else {
                         unreachable!();
-                    } 
+                    }
                 } else {
                     unreachable!();
                 }
@@ -71,9 +70,13 @@ pub fn main() {
         dbg!(line);
         dbg!(start1, end1, start2, end2);
 
-        
-        let (start1, start2, end1, end2) = (start1.parse::<i32>().unwrap(), start2.parse::<i32>().unwrap(), end1.parse::<i32>().unwrap(), end2.parse::<i32>().unwrap());
-         
+        let (start1, start2, end1, end2) = (
+            start1.parse::<i32>().unwrap(),
+            start2.parse::<i32>().unwrap(),
+            end1.parse::<i32>().unwrap(),
+            end2.parse::<i32>().unwrap(),
+        );
+
         if (start1 >= start2 && end1 <= end2) || (start2 >= start1 && end2 <= end1) {
             println!("true");
             totally_overlapping_sets += 1

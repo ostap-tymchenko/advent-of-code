@@ -4,7 +4,7 @@ use std::path::Path;
 
 fn open_file() -> String {
     // Create a path to the desired file
-    let path = Path::new("src/data.txt");
+    let path = Path::new("src/dummy-data.txt");
     let display = path.display();
 
     // Open the path in read-only mode, returns `io::Result<File>`
@@ -24,7 +24,7 @@ fn open_file() -> String {
 }
 
 
-pub fn main() {
+pub fn part_2() {
     let file = open_file();
     let mut overlapping_sets = 0;
 
