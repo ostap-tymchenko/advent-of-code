@@ -15,6 +15,7 @@ impl Stack {
         self.0.pop().expect("stack should not be empty")
     }
 
+    #[allow(dead_code)]
     fn height(&self) -> usize {
         self.0.len()
     }
@@ -30,6 +31,7 @@ impl fmt::Display for Stack {
     }
 }
 
+#[allow(dead_code)]
 fn print_stacks(stacks: &[Stack]) {
     let Some(height) = stacks.iter().map(|s| s.height()).max() else {
         eprintln!("print_stacks: nothing to print");
@@ -65,13 +67,12 @@ fn data_path(name: &str) -> PathBuf {
 
 fn read_data(name: &str) -> String {
     let path = data_path(name);
-    fs::read_to_string(&path).expect("data file should be readable")
+    fs::read_to_string(path).expect("data file should be readable, and you should run from repo dir not src dir")
 }
 
 fn parse_count(line: &str) -> usize {
     line.split_ascii_whitespace()
-        .rev()
-        .next()
+        .next_back()
         .expect("count line needs counts")
         .parse()
         .expect("count should be an int")
@@ -89,9 +90,9 @@ fn parse_head(head: &str) -> Vec<Stack> {
     let count = parse_count(count_line);
     let mut stacks = vec![Stack::default(); count];
     for line in headlines {
-        for index in 0..count {
+        for (index, stack) in stacks.iter_mut().enumerate() {
             if let Some(c) = parse_head_char(line, index) {
-                stacks[index].push(c);
+                stack.push(c);
             }
         }
     }
@@ -122,6 +123,33 @@ fn part_one(file_name: &str) -> String {
     stacks.iter().filter_map(|s| s.0.last()).collect()
 }
 
+fn part_two(file_name: &str) -> String {
+    let data = read_data(file_name);
+    let (head, body) = data
+        .split_once("\n\n")
+        .expect("head and body should be separated by a blank line");
+
+    let mut stacks = parse_head(head);
+
+    for line in body.lines() {
+        let words: Vec<_> = line.split_ascii_whitespace().collect();
+        let amount: usize = words[1].parse().expect("Amount should be int");
+        let source: usize = words[3].parse().expect("Source should be int");
+        let target: usize = words[5].parse().expect("Target should be int");
+
+        let mut buffer = Stack::default();
+        for _ in 0..amount {
+            buffer.push(stacks[source - 1].pop());
+        }
+        for c in buffer.0.into_iter().rev() {
+            stacks[target - 1].push(c);
+        }
+    }
+
+    // print_stacks(&stacks);
+    stacks.iter().filter_map(|s| s.0.last()).collect()
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -130,11 +158,17 @@ mod test {
     fn test_part_one() {
         assert_eq!(part_one("dummy-data.txt"), "CMZ");
     }
+
+    #[test]
+    fn test_part_two() {
+        assert_eq!(part_two("dummy-data.txt"), "MCD");
+    }
 }
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    println!("{}", part_one("data.txt"));
+    // println!("{}", part_one("data.txt"));
+    println!("{}", part_two("data.txt"));
 
     Ok(())
 }

@@ -2,17 +2,16 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-//         [H]     [W] [B]            
-//     [D] [B]     [L] [G] [N]        
-// [P] [J] [T]     [M] [R] [D]        
+//         [H]     [W] [B]
+//     [D] [B]     [L] [G] [N]
+// [P] [J] [T]     [M] [R] [D]
 // [V] [F] [V]     [F] [Z] [B]     [C]
 // [Z] [V] [S]     [G] [H] [C] [Q] [R]
 // [W] [W] [L] [J] [B] [V] [P] [B] [Z]
 // [D] [S] [M] [S] [Z] [W] [J] [T] [G]
 // [T] [L] [Z] [R] [C] [Q] [V] [P] [H]
 //
-// 1   2   3   4   5   6   7   8   9 
-
+// 1   2   3   4   5   6   7   8   9
 
 fn open_file(path: &Path) -> String {
     // Create a path to the desired file
@@ -59,21 +58,20 @@ pub fn main() {
 
     for line in data.lines() {
         if line != "" {
-
             let i: Vec<&str> = line.split("-").collect();
 
-            let mut move_times:usize = i[0].parse().unwrap();
-            let crate_from:usize = i[1].parse().unwrap();
-            let crate_to:usize = i[2].parse().unwrap();
-            
-            let crate_from = crate_from -1;
-            let crate_to = crate_to -1;
+            let mut move_times: usize = i[0].parse().unwrap();
+            let crate_from: usize = i[1].parse().unwrap();
+            let crate_to: usize = i[2].parse().unwrap();
+
+            let crate_from = crate_from - 1;
+            let crate_to = crate_to - 1;
 
             // these 4 lines make sure that there are enough crates to move, and prevents a crash later on if there arent.
-            let mut old_move_times = move_times; 
+            let mut old_move_times = move_times;
             if move_times > chart_vec[crate_from].len() {
-                move_times = chart_vec[crate_from].len() 
-            } 
+                move_times = chart_vec[crate_from].len()
+            }
 
             if move_times != old_move_times {
                 println!("line {line:?} asks to move {old_move_times:?} crates to be moved but {move_times:?} crates will be moved from {crate_from:?} to {crate_to:?}");
@@ -81,16 +79,19 @@ pub fn main() {
                 println!("line {line:?} asks to move {move_times:?} crates from {crate_from:?} to {crate_to:?}");
             }
 
-
             for _ in 0..move_times {
                 // we save the var were about to remove to a buffer because this is a move not delete operation
                 let move_buffer = &chart_vec[crate_from].chars().last();
                 // the last crate is removed
-                if let Some(x) = chart_vec.get_mut(crate_from) {x.pop();}
+                if let Some(x) = chart_vec.get_mut(crate_from) {
+                    x.pop();
+                }
                 // the move buffer than becomes is than saved to where it is moved to
-                if let Some(x) = chart_vec.get_mut(crate_to) {x.push(move_buffer.unwrap());}
+                if let Some(x) = chart_vec.get_mut(crate_to) {
+                    x.push(move_buffer.unwrap());
+                }
                 // chart_vec.get_mut(crate_to).unwrap().push(move_buffer.unwrap_or_default());
-                
+
                 println!("moved crate = {move_buffer:?} from {crate_from:?} to {crate_to:?}");
             }
 
@@ -104,7 +105,7 @@ pub fn main() {
             }
 
             println!("line (added to) is now {chart_vec_crate_to}");
-        } 
+        }
     }
 
     let mut top = "".to_string();
