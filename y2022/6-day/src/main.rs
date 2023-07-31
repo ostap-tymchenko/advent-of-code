@@ -32,6 +32,26 @@ fn part_one(file_name: &str) -> usize {
     panic!("inp data should have 4 consequitive uniuqe chars")
 }
 
+fn part_two(file_name: &str) -> usize {
+    let path = "data/".to_owned() + file_name;
+    let data = read_data(&path);
+
+    let mut recently_seen = String::from("");
+
+    for (index, c) in data.chars().enumerate() {
+        recently_seen.push(c);
+        if recently_seen.len() > 14 {
+            recently_seen.remove(0);
+        }
+
+        let seen: HashSet<char> = HashSet::from_iter(recently_seen.chars());
+        if seen.len() == 14 {
+            return index + 1;
+        }
+    } 
+    panic!("inp data should have 14 consequitive uniuqe chars")
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -41,15 +61,16 @@ mod test {
         assert_eq!(part_one("dummy-data.txt"), 7);
     }
 
-    // #[test]
-    // fn test_part_two() {
-    //     assert_eq!(part_two("dummy-data.txt"), todo!);
-    // }
+    #[test]
+    fn test_part_two() {
+        assert_eq!(part_two("dummy-data.txt"), 19);
+    }
 }
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    println!("{}", part_one("data.txt"));
+    // println!("{}", part_one("data.txt"));
+    println!("{}", part_two("data.txt"));
 
     Ok(())
 }
