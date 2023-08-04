@@ -59,14 +59,6 @@ fn go_to_target(mut path: StackPath, target: &str) -> StackPath {
     }
 }
 
-// fn stringify_path(sim_path: &StackPath) -> String {
-//     sim_path
-//         .0
-//         .iter()
-//         .map(|s| s.to_owned() + DIR_SPLIT_STR)
-//         .collect()
-// }
-
 fn add_my_size_to_all_my_parents(
     sim_path: &StackPath,
     file_size: i32,
@@ -96,10 +88,7 @@ fn add_my_size_to_all_my_parents(
     // println!("new dir_size_index: {:#?}", dir_size_index);
 }
 
-fn part_one(file_name: &str) -> i32 {
-    let data_path = DATA_FOLDER.to_owned() + DIR_SPLIT_STR + file_name;
-    let data = read_data(Path::new(&data_path));
-
+fn create_data_tree(data: String) -> HashMap<String, i32> {
     let mut sim_path = StackPath::default();
     let mut dir_size_index: HashMap<String, i32> = HashMap::new();
 
@@ -146,6 +135,15 @@ fn part_one(file_name: &str) -> i32 {
         }
     }
 
+    dir_size_index
+}
+
+fn part_one(file_name: &str) -> i32 {
+    let data_path = DATA_FOLDER.to_owned() + DIR_SPLIT_STR + file_name;
+    let data = read_data(Path::new(&data_path));
+
+    let dir_size_index = create_data_tree(data);
+
     let mut total = 0;
     // dbg!(&dir_size_index);
     for folder_size in dir_size_index.values() {
@@ -156,6 +154,34 @@ fn part_one(file_name: &str) -> i32 {
     total
 }
 
+fn part_two(file_name: &str) -> i32 {
+    let data_path = DATA_FOLDER.to_owned() + DIR_SPLIT_STR + file_name;
+    let data = read_data(Path::new(&data_path));
+
+    let dir_size_index = create_data_tree(data);
+
+    let total_disk_space = 70000000;
+    let space_needed_for_update = 30000000;
+    let unused_space = total_disk_space
+        - dir_size_index
+            .get(ROOT_WORD)
+            .expect("dir_size_index should always have root folder");
+
+    let remainder_needed = space_needed_for_update - unused_space;
+
+    let mut dir_bigger_than_update = vec![];
+    for folder_size in dir_size_index.values() {
+        if folder_size >= &remainder_needed {
+            dir_bigger_than_update.push(*folder_size)
+        }
+    }
+
+    *dir_bigger_than_update
+        .iter()
+        .min()
+        .expect("there should be directories bigger than update size")
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -164,11 +190,17 @@ mod test {
     fn test_default_example_p1() {
         assert_eq!(part_one("dummy-data.txt"), 95437);
     }
+
+    #[test]
+    fn test_default_example_p2() {
+        assert_eq!(part_two("dummy-data.txt"), 24933642);
+    }
 }
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    println!("{}", part_one("data.txt"));
+    // println!("{}", part_one("data.txt"));
+    println!("{}", part_two("data.txt"));
 
     Ok(())
 }
