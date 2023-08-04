@@ -11,15 +11,20 @@ fn read_data(data_path: &std::path::Path) -> String {
     fs::read_to_string(&data_path).expect("data parse fail")
 }
 
-fn part_one(file_name: &str) -> todo! {
-    let data = read_data(Path::new("data/data.txt"));
-    // let data = read_data(Path::new("./dummy-data.txt"));
+const DATA_FOLDER: &str = "data";
+const FOLDER_SPLIT: &str = "/";
+
+fn part_one(file_name: &str) -> i32 {
+    let data_path = &DATA_FOLDER + &FOLDER_SPLIT + file_name;
+    let data = read_data(Path::new(&data_path));
+
+    todo!()
 }
 
-fn part_two(file_name: &str) -> todo! {
-    let data = read_data(Path::new("data/data.txt"));
-    // let data = read_data(Path::new("./dummy-data.txt"));
-}
+// fn part_two(file_name: &str) -> todo! {
+//     let data = read_data(Path::new("data/data.txt"));
+//     // let data = read_data(Path::new("./dummy-data.txt"));
+// }
 
 #[cfg(test)]
 mod test {
@@ -27,18 +32,18 @@ mod test {
 
     #[test]
     fn test_part_one() {
-        assert_eq!(part_one("dummy-data.txt"), todo!);
+        assert_eq!(part_one("dummy-data.txt"), TODO);
     }
 
-    #[test]
-    fn test_part_two() {
-        assert_eq!(part_two("dummy-data.txt"), todo!);
-    }
+    // #[test]
+    // fn test_part_two() {
+    //     assert_eq!(part_two("dummy-data.txt"), todo!);
+    // }
 }
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    part_one();
+    println!({part_one});
 
     Ok(())
 }

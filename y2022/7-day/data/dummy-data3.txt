@@ -1,0 +1,13 @@
+$ cd /
+$ ls
+500 c.dat
+dir a
+$ cd a
+$ ls
+100 d.dat
+200 e.dat
+dir b
+$ cd b
+$ ls
+300 d.txt
+999 big_file.txt

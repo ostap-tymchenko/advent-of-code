@@ -1,22 +1,24 @@
 use color_eyre::eyre::Result;
-use std::any::type_name;
+// use std::any::type_name;
 use std::collections::HashMap;
-use std::{fs, fmt};
 use std::path::Path;
+use std::{fmt, fs};
 
-fn type_of<T>(_: T) -> &'static str {
-    type_name::<T>()
-}
+// fn type_of<T>(_: T) -> &'static str {
+//     type_name::<T>()
+// }
 
 fn read_data(data_path: &std::path::Path) -> String {
-    fs::read_to_string(&data_path).expect("data parse fail")
+    fs::read_to_string(data_path).expect("data parse fail")
 }
 
-const FOLDER_SPLIT_STR: &str = "/";
-const FOLDER_SPLIT_CHAR: char = '/';
+const DIR_SPLIT_STR: &str = "/";
 const WHITESPACE: char = ' ';
 const ROOT: &str = "/";
 const ROOT_WORD: &str = "ROOT";
+const ONE_HUNDRED_THOUSAND: i32 = 100_000;
+const PARENT_REF: &str = "..";
+const DATA_FOLDER: &str = "data";
 
 #[derive(Clone, Default, Debug)]
 struct StackPath(Vec<String>);
@@ -42,71 +44,84 @@ impl fmt::Display for StackPath {
     }
 }
 
-fn go_to_target(mut path: StackPath, target: String) -> StackPath {
-    if target == ROOT {
-        return StackPath::default();
-    } else if target == ".." {
-        StackPath(vec![path.pop()])
-    } else {
-        // target is file
-        path.push(target);
-        path
+fn go_to_target(mut path: StackPath, target: &str) -> StackPath {
+    match target {
+        ROOT => StackPath::default(),
+        PARENT_REF => {
+            path.pop();
+            path
+        }
+
+        _ => {
+            path.push(target.to_string());
+            path
+        }
     }
 }
 
-fn stringify_path(sim_path: &StackPath) -> String {
-    sim_path.0.iter().map(|s| s.to_owned() + FOLDER_SPLIT_STR).collect()
-}
+// fn stringify_path(sim_path: &StackPath) -> String {
+//     sim_path
+//         .0
+//         .iter()
+//         .map(|s| s.to_owned() + DIR_SPLIT_STR)
+//         .collect()
+// }
 
-fn add_my_size_to_all_my_parents(sim_path: &StackPath,file_name: &str, file_size: i32, dir_size_index: &mut HashMap<String, i32>) {
-    let location_of_me = stringify_path(&sim_path);
+fn add_my_size_to_all_my_parents(
+    sim_path: &StackPath,
+    file_size: i32,
+    dir_size_index: &mut HashMap<String, i32>,
+) {
+    // println!("called add_my_size_to_all_my_parents on");
+    // println!("sim_path: {sim_path}, file_size: {file_size}, dir_size_index: {:#?}", &dir_size_index);
 
-
-    // println!("\nloop start [");
-    // println!("added file {file_name}, of size {file_size} to [ROOT] bc path is {sim_path}");
     if let Some(root_folder_size) = dir_size_index.get_mut(ROOT_WORD) {
         *root_folder_size += file_size;
-        // println!("via adding");
     } else {
         // the root folder is imaginary, and not found in the real path
         // because of this we add it seperatly here instead.
         dir_size_index.insert(ROOT_WORD.to_string(), file_size);
-        // println!("via creating");
     }
 
+    let mut dir_buff = String::from("");
     for dir in &sim_path.0 {
-        // println!("added file {file_name}, of size {file_size} to folder [{dir}] bc path is {sim_path}");
-        if let Some(existing_size) = dir_size_index.get_mut(&location_of_me) {
+        dir_buff.push_str(&(DIR_SPLIT_STR.to_owned() + dir));
+        if let Some(existing_size) = dir_size_index.get_mut(&dir_buff) {
             *existing_size += file_size;
-            // println!("via adding");
         } else {
-            dir_size_index.insert(location_of_me.clone(), file_size);
-            // println!("via creating");
+            dir_size_index.insert(dir_buff.clone(), file_size);
         }
     }
-    // println!("\n] loop end");
+
+    // println!("new dir_size_index: {:#?}", dir_size_index);
 }
 
 fn part_one(file_name: &str) -> i32 {
-    let data_path = "data/".to_owned() + file_name;
+    let data_path = DATA_FOLDER.to_owned() + DIR_SPLIT_STR + file_name;
     let data = read_data(Path::new(&data_path));
 
     let mut sim_path = StackPath::default();
     let mut dir_size_index: HashMap<String, i32> = HashMap::new();
 
     for line in data.lines() {
-        let fc = line.chars().nth(0).expect("line should have at least one char");
+        let fc = line
+            .chars()
+            .next()
+            .expect("line should have at least one char");
 
         if fc == '$' {
             // comman0d
-            let sc = line.chars().nth(2).expect("line command should have at least two chars");
+            let sc = line
+                .chars()
+                .nth(2)
+                .expect("line command should have at least two chars");
             if sc == 'c' {
-                // command starting with c is cd
-                // print!("goto from '{}' with target '{}'", sim_path.clone(), line.split_whitespace().nth(2).unwrap());
-                let target = line.split_whitespace().nth(2).expect("line with command should have at least 3 words").to_string();
-                sim_path = go_to_target(sim_path, target);
-                // println!(" new path:'{sim_path:?}'");
-
+                let target = line
+                    .split_whitespace()
+                    .nth(2)
+                    .expect("line with command should have at least 3 words")
+                    .to_string();
+                sim_path = go_to_target(sim_path, &target);
             } else if sc == 'l' {
                 // ls
             } else {
@@ -117,24 +132,28 @@ fn part_one(file_name: &str) -> i32 {
             // dir name
         } else {
             // file
-            let split = line.split_once(WHITESPACE).expect("file line should have a space");
+            let split = line
+                .split_once(WHITESPACE)
+                .expect("file line should have a space");
 
-            let file_size = split.0.parse::<i32>().expect("file size should be parsable");
-            let file_name = split.1;
+            let file_size = split
+                .0
+                .parse::<i32>()
+                .expect("file size should be parsable");
+            // let file_name = split.1;
 
-            add_my_size_to_all_my_parents(&sim_path, file_name, file_size, &mut dir_size_index);
+            add_my_size_to_all_my_parents(&sim_path, file_size, &mut dir_size_index);
         }
     }
 
     let mut total = 0;
     // dbg!(&dir_size_index);
     for folder_size in dir_size_index.values() {
-        if folder_size <= &100_000{
-            total += folder_size 
+        if folder_size <= &ONE_HUNDRED_THOUSAND {
+            total += folder_size
         }
     }
-
-    return total;
+    total
 }
 
 #[cfg(test)]
@@ -142,14 +161,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_part_one() {
+    fn test_default_example_p1() {
         assert_eq!(part_one("dummy-data.txt"), 95437);
     }
-
-    // #[test]
-    // fn test_part_two() {
-    //     assert_eq!(part_two("dummy-data.txt"), todo!);
-    // }
 }
 
 fn main() -> Result<()> {
