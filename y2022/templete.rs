@@ -15,16 +15,11 @@ const DATA_FOLDER: &str = "data";
 const FOLDER_SPLIT: &str = "/";
 
 fn part_one(file_name: &str) -> i32 {
-    let data_path = &DATA_FOLDER + &FOLDER_SPLIT + file_name;
+    let data_path = DATA_FOLDER.to_owned() + FOLDER_SPLIT + file_name;
     let data = read_data(Path::new(&data_path));
 
     todo!()
 }
-
-// fn part_two(file_name: &str) -> todo! {
-//     let data = read_data(Path::new("data/data.txt"));
-//     // let data = read_data(Path::new("./dummy-data.txt"));
-// }
 
 #[cfg(test)]
 mod test {
@@ -32,7 +27,7 @@ mod test {
 
     #[test]
     fn test_part_one() {
-        assert_eq!(part_one("dummy-data.txt"), TODO);
+        assert_eq!(part_one("dummy-data.txt"), 21);
     }
 
     // #[test]
@@ -43,7 +38,7 @@ mod test {
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    println!({part_one});
+    println!("{}", part_one("data.txt"));
 
     Ok(())
 }

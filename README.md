@@ -4,11 +4,10 @@ advent of code is a yearly programming Christmas themed challenge. This implemen
 #### year 2022
 | days  | part 1 | part 2 |
 |-------|--------|--------|
-| day 1 | ☑️      | ☑️      |
-| day 2 | ☑️      | ☑️      |
-| day 3 | ☑️      | ☑️       |
-| day 4 | ☑️      | ☑️       |
-| day 5 | ☑️      | ☑️       |
-| day 6 | ☑️      | ☑️       |
-| day 7 | ☑️      |        |
-| day 8 | ☑️      |        |
+| day 1 |☑️|☑️|
+| day 2 |☑️|☑️|
+| day 4 |☑️|☑️|
+| day 5 |☑️|☑️|
+| day 6 |☑️|☑️|
+| day 7 |☑️|☑️|
+| day 8 |☑️||
