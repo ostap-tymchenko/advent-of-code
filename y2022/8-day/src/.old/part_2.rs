@@ -90,17 +90,17 @@ pub fn main() {
     println!("{top_scenic_score}");
 } 
 
-// fn calc_offset (iter: &usize, direction:&CardinalDirections, x_or_y: usize) -> usize {
-//     println!("reached calc_offset");
-//     if *direction == CardinalDirections::NORTH {
-//         return x_or_y+iter; //x only
-//     } else if *direction == CardinalDirections::SOUTH {
-//         return x_or_y-iter; // only
-//     } else if *direction == CardinalDirections::EAST {
-//         return x_or_y+iter; //y only
-//     } else if *direction == CardinalDirections::WEST {
-//         return x_or_y-iter; // y only
-//     } else {
-//         panic!("unreachable state reached");
-//     }
-// }
+fn calc_offset (iter: &usize, direction:&CardinalDirections, x_or_y: usize) -> usize {
+    println!("reached calc_offset");
+    if *direction == CardinalDirections::NORTH {
+        return x_or_y+iter; //x only
+    } else if *direction == CardinalDirections::SOUTH {
+        return x_or_y-iter; //x only
+    } else if *direction == CardinalDirections::EAST {
+        return x_or_y+iter; //y only
+    } else if *direction == CardinalDirections::WEST {
+        return x_or_y-iter; // y only
+    } else {
+        panic!("unreachable state reached");
+    }
+}
