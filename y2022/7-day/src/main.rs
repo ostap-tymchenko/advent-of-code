@@ -199,7 +199,7 @@ mod test {
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    // println!("{}", part_one("data.txt"));
+    println!("{}", part_one("data.txt"));
     println!("{}", part_two("data.txt"));
 
     Ok(())
