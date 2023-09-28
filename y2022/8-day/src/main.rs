@@ -1,5 +1,4 @@
 use color_eyre::eyre::Result;
-// use color_eyre::Report;
 use core::fmt;
 // use std::any::type_name;
 use std::fs;
@@ -33,10 +32,6 @@ impl Forrest {
     // fn get(&self, c: Coordinates) -> Result<u32, Report> {
     //     Ok(self.0[c.y][c.x])
     // }
-
-    // fn push(&mut self, v: Vec<u32>) {
-    //     self.0.push(v);
-    // }
 }
 
 impl fmt::Display for Forrest {
@@ -50,7 +45,22 @@ impl fmt::Display for Forrest {
     }
 }
 
-fn parse_forrest(data: String) -> Forrest {
+#[derive(Debug, PartialEq, Clone, Copy)]
+enum ForrestMirrorOptions {
+    InvisibleTree(u32),
+    VisibleTree,
+}
+
+#[derive(Debug)]
+struct ForrestMirror(Vec<Vec<ForrestMirrorOptions>>);
+
+impl ForrestMirror {
+    fn unchecked_set_visible(&mut self, c: Coordinates) {
+        self.0[c.y][c.x] = ForrestMirrorOptions::VisibleTree;
+    }
+}
+
+fn costruct_forrest(data: String) -> Forrest {
     Forrest(
         data.lines()
             .map(|l| {
@@ -80,11 +90,137 @@ fn y_len(f: &Forrest) -> usize {
 fn usize_to_i32(u: usize) -> i32 {
     u.try_into().expect("couldnt convert usize to i32")
 }
+
+fn construct_mirror_forrest(data: String) -> ForrestMirror {
+    ForrestMirror(
+        data.lines()
+            .map(|l| {
+                l.chars()
+                    .map(|c| c.to_digit(10).expect("char should be pos <10"))
+                    .map(|d| ForrestMirrorOptions::InvisibleTree(d))
+                    .collect::<Vec<ForrestMirrorOptions>>()
+            })
+            .collect::<Vec<Vec<ForrestMirrorOptions>>>(),
+    )
+}
+
+fn display_mirror(fm: &ForrestMirror) {
+    println!();
+    for line in fm.0.iter() {
+        for tree in line {
+            match tree {
+                ForrestMirrorOptions::VisibleTree => print!("X"),
+                ForrestMirrorOptions::InvisibleTree(t) => print!("{t}"),
+            }
+        }
+        println!();
+    }
+}
+
+fn flip_forrest_90_degrees(forrest: &mut Forrest) {
+    let n = forrest.0.len();
+    
+    // Transpose the forrest
+    for i in 0..n {
+        for j in i..n {
+            let temp = forrest.0[i][j];
+            forrest.0[i][j] = forrest.0[j][i];
+            forrest.0[j][i] = temp;
+        }
+    }
+    
+    // Reverse each row
+    for i in 0..n {
+        forrest.0[i].reverse();
+    }
+}
+
+fn flip_mirror_forrest_90_degrees(forrest_mirror: &mut ForrestMirror) {
+    let n = forrest_mirror.0.len();
+    
+    // Transpose the forrest
+    for i in 0..n {
+        for j in i..n {
+            let temp = forrest_mirror.0[i][j];
+            forrest_mirror.0[i][j] = forrest_mirror.0[j][i];
+            forrest_mirror.0[j][i] = temp;
+        }
+    }
+    
+    // Reverse each row
+    for i in 0..n {
+        forrest_mirror.0[i].reverse();
+    }
+}
+
+fn scan_right(forrest: &Forrest, forrest_mirror: &mut ForrestMirror) {
+    for (y, line) in forrest.0.iter().enumerate() {
+        let mut top_tree = 0;
+
+        for (x, tree) in line.iter().enumerate() {
+            if *tree > top_tree || x == 0 {
+                forrest_mirror.unchecked_set_visible(Coordinates { x: x, y: y});
+                top_tree = *tree;
+            }
+        }
+    }
+}
+
+fn scan_left(forrest: &Forrest, forrest_mirror: &mut ForrestMirror) {
+    let x_len = checked_constant_x_len(&forrest);
+
+    for (y, line) in forrest.0.iter().rev().enumerate() {
+        let mut top_tree = 0;
+        for (x, tree) in line.iter().rev().enumerate() {
+            if *tree > top_tree || x == 0 {
+                forrest_mirror.unchecked_set_visible(Coordinates { x: (x_len -x -1), y: y});
+                top_tree = *tree;
+            }
+        }
+    }
+}
+
+fn scan_up(forrest: &Forrest, forrest_mirror: &mut ForrestMirror) {
+    let y_len = y_len(&forrest);
+
+}
+
+fn part_one(file_name: &str) -> i32 {
+    let data_path = DATA_FOLDER.to_owned() + FOLDER_SPLIT + file_name;
+    let data = read_data(Path::new(&data_path));
+
+    let mut forrest = costruct_forrest(data.clone());
+    let mut forrest_mirror = construct_mirror_forrest(data);
+
+    scan_right(&forrest, &mut forrest_mirror);
+    scan_left(&forrest, &mut forrest_mirror);
+    scan_up(&forrest, &mut forrest_mirror);
+
+    // flip_forrest_90_degrees(&mut forrest);
+    // flip_mirror_forrest_90_degrees(&mut forrest_mirror);
+
+    // scan_right(&forrest, &mut forrest_mirror);
+    // scan_left(&forrest, &mut forrest_mirror);
+
+    display_mirror(&forrest_mirror);
+    println!();
+    // usize_to_i32(forrest_mirror.0.iter().map(|x| x.iter().filter(|x| **x == ForrestMirrorOptions::VisibleTree)).count())
+    let mut seen_trees = 0;
+    for line in forrest_mirror.0.iter() {
+        for tree in line.iter() {
+            if *tree == ForrestMirrorOptions::VisibleTree {
+                seen_trees += 1;
+            }
+        }
+    }
+    seen_trees
+}
+
 fn part_two(file_name: &str) -> i32 {
     let data_path = DATA_FOLDER.to_owned() + FOLDER_SPLIT + file_name;
     let data = read_data(Path::new(&data_path));
 
-    let forrest = parse_forrest(data);
+    let forrest = costruct_forrest(data);
 
     let x_len = checked_constant_x_len(&forrest);
     let y_len = y_len(&forrest);
@@ -155,10 +291,10 @@ fn part_two(file_name: &str) -> i32 {
 mod test {
     use super::*;
 
-    // #[test]
-    // fn test_part_one() {
-    //     assert_eq!(part_one("dummy-data.txt"), 21);
-    // }
+    #[test]
+    fn test_part_one() {
+        assert_eq!(part_one("dummy-data.txt"), 21);
+    }
 
     #[test]
     fn test_part_two() {
@@ -168,8 +304,8 @@ mod test {
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    // println!("{}", part_one("data.txt"));
-    println!("{}", part_two("data.txt"));
+    println!("{}", part_one("data.txt"));
+    // println!("{}", part_two("data.txt"));
 
     Ok(())
 }
