@@ -12,4 +12,4 @@ advent of code is a yearly programming Christmas themed challenge. This implemen
 | day 7 |☑️|☑️|
 | day 8 |☑️|☑️|
 | day 9 |❌|❌|
-| day 10 |☑️|❌|
+| day 10 |☑️|☑️|

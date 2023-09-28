@@ -77,14 +77,28 @@ fn print_crt(crt_output: Vec<char>) {
     }
 }
 
+// fn update_crt(crt_output: &mut Vec<char>, register: i32) {
+//     let horizontal_index = crt_output.len() % 40;
+//     let reg_as_usize = register as usize;
+//
+//     println!("index:{} hindex:{} register:{register}",crt_output.len(), horizontal_index);
+//     if horizontal_index == reg_as_usize
+//         || horizontal_index == reg_as_usize.checked_add(1).unwrap_or(reg_as_usize)
+//         || horizontal_index == reg_as_usize.checked_sub(1).unwrap_or(reg_as_usize)
+//     {
+//         crt_output.push('#')
+//     } else {
+//         crt_output.push('.')
+//     }
+// }
+
 fn update_crt(crt_output: &mut Vec<char>, register: i32) {
-    let horizontal_index = crt_output.len() % 40;
-    let reg_as_usize = register as usize;
+    let horizontal_index = (crt_output.len() % 40) as i32;
 
     println!("index:{} hindex:{} register:{register}",crt_output.len(), horizontal_index);
-    if horizontal_index == reg_as_usize
-        || horizontal_index == reg_as_usize.checked_add(1).unwrap_or(reg_as_usize)
-        || horizontal_index == reg_as_usize.checked_sub(1).unwrap_or(reg_as_usize)
+    if horizontal_index == register
+        || horizontal_index == register.checked_add(1).unwrap_or(register)
+        || horizontal_index == register.checked_sub(1).unwrap_or(register)
     {
         crt_output.push('#')
     } else {
