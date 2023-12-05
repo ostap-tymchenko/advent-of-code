@@ -14,7 +14,6 @@ target/
 *.pdb
 
 # vscode
-
 .settings/
 .vscode/
 bin/
@@ -23,5 +22,10 @@ bin/
 
 
 # Added by cargo
-
 /target
+
+# ignore note files
+.note.md
+
+# ignote backups
+.bk

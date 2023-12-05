@@ -184,7 +184,7 @@ fn part_two(data: String, tail_len: usize) -> usize {
     }
 
     // dbg!(&unique_tails);
-    // display_grid(&unique_tails);
+    display_grid(&unique_tails);
     unique_tails.len()
 }
 
